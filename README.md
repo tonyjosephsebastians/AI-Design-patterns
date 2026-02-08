@@ -304,22 +304,7 @@ Patterns **only make sense in groups**.
 - ✅ Always place the pattern in the system
 - ✅ Always explain trade-offs
 
-> **If you can explain why NOT to use a pattern, you truly understand it.**
 
----
-
-## 🎤 Interview Reality
-
-You do **not** need to recite 90 patterns.
-
-You need to:
-- deeply understand **20–30**
-- recognize the rest
-- apply them naturally while designing systems
-
-This map ensures you reach that level.
-
----
 
 ## ✅ Recommended Order
 
