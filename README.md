@@ -9,13 +9,14 @@ This repository is a **failure-driven learning system** for mastering:
 
 This is not theory.
 
-This is an execution blueprint for becoming a **Senior AI / Backend Engineer**.
+
+
+## 📊 Pattern Library Excel
+View online here: https://docs.google.com/spreadsheets/d/1do33-iOarpuHW6Ar6jlX9DSFrtf2fw0c/edit?usp=sharing&ouid=115587245782462504192&rtpof=true&sd=true
+
 
 ---
 
-# 🎯 How To Study (Correct Way)
-
-## The 60–75 Minute Pattern Loop
 
 For each pattern:
 
