@@ -1,6 +1,5 @@
-# Interview Pattern Library (DSA + AI/System Design)
 
-A practical, interview-focused pattern map:
+A practical pattern map:
 - **13 Core DSA Patterns** (with sub-patterns)
 - **AI/System Design Patterns** (reliability, scalability, RAG/agents, observability)
 - Built for **fast recall + repeatable practice**
@@ -166,7 +165,6 @@ A practical, interview-focused pattern map:
 
 ---
 
-# How to Use This Repo (recommended workflow)
 
 ## Weekly rhythm
 - **3 days DSA**: 1 pattern (template + canonical + variation + redo)
