@@ -1,323 +1,181 @@
-# 🧠 Master Pattern Map — Production AI & Backend Systems
+# Interview Pattern Library (DSA + AI/System Design)
 
-This repository is a **learning + reference system** for mastering **90 critical design patterns** required to build **production-grade AI systems** (LLMs, RAG, agents, APIs).
-
-⚠️ This is **not** a textbook or GoF summary.  
-This is a **failure-driven pattern map**, based on how real systems break in production.
-
----
-
-## 🎯 How to Think About Patterns (READ THIS FIRST)
-
-❌ Do NOT learn patterns by:
-- memorizing definitions
-- reading GoF chapters in order
-- copying UML diagrams
-
-✅ Learn patterns by:
-- **triggering real failures**
-- **fixing those failures with patterns**
-- **placing patterns inside a real system**
-
-> **Patterns exist because something breaks without them.**
+A practical, interview-focused pattern map:
+- **13 Core DSA Patterns** (with sub-patterns)
+- **AI/System Design Patterns** (reliability, scalability, RAG/agents, observability)
+- Built for **fast recall + repeatable practice**
 
 ---
 
-## 🧭 How to Use This Repository
-
-### The Correct Learning Method
-For **each group**:
-
-1. **Trigger the failure**
-2. **Feel the pain**
-3. **Apply the patterns in that group**
-4. **Move on only when the failure is resolved**
-
-⚠️ Never learn patterns individually.  
-Patterns **only make sense in groups**.
+## How to study (simple + effective)
+**Per pattern (60–75 min):**
+1) Write **template from memory** (10m)  
+2) Solve **1 canonical** problem/task (25m)  
+3) Solve **1 variation** (20m)  
+4) **Teach-back notes** (5m)  
+5) Next day: **redo canonical** (10m)
 
 ---
 
-# 🔵 GROUP 1 — Requests Are Slow or Unreliable  
-**(Foundation — MUST be first)**
+# DSA Patterns (13 Core)
 
-### Failure
-- APIs block
-- Requests time out
-- Retries behave incorrectly
-- AI calls hang or cascade failures
+| # | Pattern | Triggers (spot it fast) | Sub-patterns | Canonical (start here) | Variations (pick 1) |
+|---|---------|--------------------------|--------------|------------------------|---------------------|
+| 1 | Two Pointers | sorted, palindrome, pair sum, partition | opposite L/R; same dir; partition; pair in sorted | **Valid Palindrome (125)** | **3Sum (15)** / **Container (11)** |
+| 2 | Sliding Window | substring/subarray, longest/shortest, at most/at least | fixed; variable; freq map; constraints | **Longest Substring w/o Repeat (3)** | **Permutation in String (567)** / **Min Window (76)** |
+| 3 | Fast/Slow Pointers | cycles, repeated state, linked list middle | cycle detect; entry; middle; happy number | **Linked List Cycle (141)** | **Cycle II (142)** / **Happy Number (202)** |
+| 4 | Binary Search | sorted, monotonic, “min/max answer” | classic; left bound; right bound; rotated; answer space | **Binary Search (704)** | **Rotated Search (33)** / **Peak (162)** |
+| 5 | Tree DFS | recursion, path, subtree, height | preorder/in/post; top-down; bottom-up; path; tree DP | **Max Depth (104)** | **Validate BST (98)** / **Max Path Sum (124)** |
+| 6 | Tree BFS | level order, shortest in tree | level order; zigzag; multi-source; parent pointers | **Level Order (102)** | **Zigzag (103)** / **Distance K (863)** |
+| 7 | Graph DFS/BFS | components, reachability, deps, shortest | dfs visited; bfs; multi-source; topo; union-find | **Number of Islands (200)** | **Course Schedule (207)** / **Word Ladder (127)** |
+| 8 | Backtracking | generate all, constraints, search tree | subsets; perms; combs; prune; grid; dup skip | **Subsets (78)** | **Combination Sum (39)** / **N-Queens (51)** |
+| 9 | Heap / PQ | top-k, merge-k, scheduling | min/max; top-k; k-merge; two heaps; scheduling | **Top K Frequent (347)** | **Kth Largest (215)** / **Merge K Lists (23)** |
+| 10 | DP | optimal + overlap | 1D; 2D; knapsack; LIS; interval; tree; bitmask | **Climbing Stairs (70)** | **Coin Change (322)** / **Edit Distance (72)** |
+| 11 | Prefix Sum | range sum, subarray sum=k | 1D; hashmap prefix; 2D; diff array | **Subarray Sum = K (560)** | **Product Except Self (238)** / **2D sum (304)** |
+| 12 | Monotonic Stack | next greater, histogram, spans | inc/dec; NGE; histogram; maximal rectangle | **Daily Temps (739)** | **Histogram (84)** / **Max Rectangle (85)** |
+| 13 | Greedy | local best → global, intervals | intervals; sort+pick; jump; circular; greedy+heap | **Merge Intervals (56)** | **Jump Game (55)** / **Gas Station (134)** |
 
-### Patterns
-- Sync vs Async Execution  
-- Long-Running Task Pattern  
-- Job / Workflow Pattern  
-- State Pattern (GoF)  
-- Retry Pattern  
-- Exponential Backoff  
-- Timeout Pattern  
-- Circuit Breaker Pattern  
-- Partial Result Pattern  
-- Graceful Degradation Pattern  
-
-📌 **Status:** Implemented in Google Colab  
-📌 **Outcome:** Reliable async job execution for AI workloads
+> Tip: For each pattern, your “canonical” is the one you redo from memory after 24 hours.
 
 ---
 
-# 🟣 GROUP 2 — Duplicate Requests & Retries Break the System  
-**(Correctness & cost safety)**
+# AI/System Design Patterns
 
-### Failure
-- Users retry requests
-- Duplicate jobs are created
-- Token cost doubles silently
+## Reliability & Resilience
 
-### Patterns
-- Idempotent Command Pattern  
-- Request Deduplication Pattern  
-- Content Hashing Pattern  
-- Singleton (GoF — config/locks only)  
-- Command Pattern (GoF)  
-
-📌 **Goal:** Safe retries without duplicate work
+| Pattern | When to use | Implementation tasks (practice) |
+|--------|-------------|----------------------------------|
+| Timeout | calls can hang | Add per-call timeout + global SLA timeout |
+| Retry + Backoff (+ jitter) | transient failures (429/5xx) | Retry only idempotent ops; add jitter |
+| Circuit Breaker | cascading failures | Open/half-open/close states + metrics |
+| Bulkhead | isolate failures | Separate worker pools for OCR vs LLM |
+| Rate Limiting | protect system | per-tenant token bucket |
+| Graceful Degradation | partial availability | fallback model, partial answer, “cannot determine” |
+| Partial Results | long workflows | return partial extraction + status link |
+| Load Shedding | overload | reject low-priority jobs early |
 
 ---
 
-# 🟢 GROUP 3 — State Breaks When Services Restart  
-**(Data & persistence)**
+## Distributed Workflows & Async
 
-### Failure
-- App restarts
-- In-memory jobs disappear
-- System loses truth
-
-### Patterns
-- Stateless Service Pattern  
-- Externalized State Pattern  
-- Entity Decomposition Pattern  
-- Canonical Data Model Pattern  
-- Versioned Data Pattern  
-- Append-Only / Audit Log Pattern  
-- Replay / Reprocessing Pattern  
-- Memento Pattern (GoF)  
-- Soft Delete Pattern  
-
-📌 **Goal:** System survives restarts and supports replay
+| Pattern | When to use | Practice tasks (mini-project) |
+|--------|-------------|--------------------------------|
+| Job/Workflow | long tasks | job_id + step states in SQL |
+| Long-running task | > request time | async submit + polling/webhook |
+| Idempotency key | retries happen | idempotency on submit endpoint |
+| Dedup (hashing) | duplicate requests | hash(input) → reuse result |
+| Outbox | reliable events | write to DB + publish later |
+| Backpressure | queues grow | limit concurrency + queue depth alarms |
+| Saga | multi-step with rollback | compensating actions per step |
 
 ---
 
-# 🟡 GROUP 4 — APIs Become Messy and Hard to Evolve  
-**(REST & service boundaries)**
+## API Design & Evolution
 
-### Failure
-- Breaking API changes
-- Inconsistent responses
-- Clients tightly coupled to backend logic
-
-### Patterns
-- Resource-Oriented Design  
-- API Versioning Pattern  
-- Structured Error Pattern  
-- Pagination & Filtering Pattern  
-- API Gateway Pattern  
-- Backend-for-Frontend (BFF) Pattern  
-- Proxy Pattern (GoF — auth, cache, rate limiting)  
-
-📌 **Goal:** Stable, evolvable APIs
+| Pattern | When to use | Practice tasks |
+|--------|-------------|----------------|
+| API Gateway | single entrypoint | auth, rate limit, routing, request-id |
+| BFF | multiple clients | mobile vs web tailored payloads |
+| Versioning | breaking changes | `/v1`, `/v2` + compatibility layer |
+| Structured errors | consistent handling | error codes + trace_id + user message |
+| Pagination/filtering | list endpoints | cursor pagination + filters |
+| Contract testing | prevent breakage | tests for response schema |
 
 ---
 
-# 🔴 GROUP 5 — LLM Answers Are Wrong (RAG Fails)  
-**(AI correctness)**
+## Data, Storage & Caching
 
-### Failure
-- Hallucinations
-- Irrelevant context
-- Wrong or ungrounded answers
-
-### Patterns
-- Naive RAG Pattern  
-- Chunked Retrieval Pattern  
-- Metadata-First Retrieval Pattern  
-- Hybrid Retrieval Pattern  
-- Multi-Stage Retrieval Pattern  
-- Re-Ranking Pattern  
-- Context Budgeting Pattern  
-- Compression / Summarization Pattern  
-- Grounded Generation Pattern (citations)  
-- Retrieval Guardrails Pattern  
-- RAG Evaluation Pattern  
-
-📌 **Goal:** Deterministic, explainable, grounded answers
+| Pattern | When to use | Practice tasks |
+|--------|-------------|----------------|
+| Cache-aside | repeated reads | cache retrieval results by hash |
+| CQRS | heavy reads | read model for dashboard |
+| Audit log | compliance | append-only `audit_events` table |
+| Soft delete | restore + audit | `deleted_at` + filters |
+| Immutable blob + metadata DB | documents | store PDF in blob, metadata in SQL |
 
 ---
 
-# 🟠 GROUP 6 — LLM Workflows Become Complex  
-**(Pipelines & agents)**
+## Streaming & Eventing
 
-### Failure
-- if-else spaghetti
-- unreadable orchestration logic
-- fragile workflows
-
-### Patterns
-- Chain of Responsibility (GoF)  
-- Strategy Pattern (GoF)  
-- Template Method (GoF)  
-- Composite Pattern (GoF)  
-- Router Agent Pattern  
-- Planner → Executor Pattern  
-- Tool Invocation Pattern  
-- Stepwise Execution Pattern  
-
-📌 **Goal:** Clean, composable AI workflows
+| Pattern | When to use | Practice tasks |
+|--------|-------------|----------------|
+| Pub/Sub | async fanout | “doc_uploaded” → multiple consumers |
+| DLQ | poison messages | move failed jobs after N retries |
+| Replay | reprocessing | re-run pipeline from stored steps |
 
 ---
 
-# 🟤 GROUP 7 — Multi-Agent Systems Misbehave  
-**(Agent orchestration)**
+## Observability & Governance
 
-### Failure
-- Agents loop forever
-- Conflicting actions
-- Unsafe autonomous behavior
-
-### Patterns
-- Supervisor / Orchestrator Pattern  
-- Mediator Pattern (GoF)  
-- Deterministic Agent Pattern  
-- Human-in-the-Loop Pattern  
-- Fallback / Escalation Pattern  
-- Multi-Agent Collaboration Pattern  
-
-📌 **Goal:** Controlled, auditable agent behavior
+| Pattern | Why it matters | Practice tasks |
+|--------|-----------------|----------------|
+| Tracing | explain failures | trace_id across gateway → workers |
+| Prompt versioning | reproduce outputs | store prompt template hash + params |
+| Replay | debug “why model said this” | run same inputs with same prompt+model |
+| Metrics | SLOs | latency, success rate, cost per job |
+| Cost observability | billing control | tokens per tenant per endpoint |
 
 ---
 
-# ⚫ GROUP 8 — System Is Impossible to Debug  
-**(Observability & trust)**
+## Security & Compliance
 
-### Failure
-- “I don’t know why the model answered this”
-- No reproducibility
-- No audit trail
-
-### Patterns
-- End-to-End Trace Pattern  
-- Observer Pattern (GoF)  
-- Input / Output Logging Pattern  
-- Prompt Versioning Pattern  
-- Replayable Execution Pattern  
-- Offline Evaluation Pattern  
-- Feedback Loop Pattern  
-- Shadow / Dry-Run Pattern  
-- Black-Box Debugging Pattern  
-
-📌 **Goal:** Explain, reproduce, and debug any AI decision
+| Pattern | When to use | Practice tasks |
+|--------|-------------|----------------|
+| RBAC | enterprise | role-based access per tenant |
+| Secrets mgmt | no hardcoding | Key Vault + rotation |
+| PII redaction | sensitive docs | regex+NER → redact before logs |
+| Policy enforcement | unsafe outputs | fail-closed on violations |
+| Content moderation | safety | pre/post moderation gates |
 
 ---
 
-# 🟧 GROUP 9 — Cost Explodes  
-**(Production reality)**
+# LLM/RAG/Agentic Patterns (AI Engineer)
 
-### Failure
-- Token bills spiral
-- No per-tenant accountability
-- Runaway usage
+## RAG Core
 
-### Patterns
-- Token Accounting Pattern  
-- Cost Attribution Pattern  
-- Quota Enforcement Pattern  
-- Budget Enforcement Pattern  
-- Flyweight Pattern (GoF — reuse templates/tokenizers)  
+| Pattern | Goal | Practice tasks |
+|--------|------|----------------|
+| Chunking | better recall | chunk by headings/pages; store chunk_id |
+| Metadata-first | reduce noise | filter by doc_type, date, tenant |
+| Hybrid retrieval | best recall | combine BM25 + vector |
+| Re-ranking | boost relevance | rerank top-20 to top-5 |
+| Context budgeting | fit tokens | compress + top-k cap |
+| Grounded generation | citations | answer with chunk_id citations |
+| Verification | reduce hallucinations | “not found → null” rule |
 
-📌 **Goal:** Predictable, controlled AI spend
+## Multi-Agent Workflows
 
----
+| Pattern | Goal | Practice tasks |
+|--------|------|----------------|
+| Orchestrator | control flow | LangGraph state machine |
+| Router agent | route tasks | doc_type/confidence routing |
+| Plan & execute | structured steps | planner outputs plan JSON |
+| Critic/verifier | quality gate | verify schema + evidence |
+| HITL escalation | safety | route low confidence to review |
+| Deterministic outputs | reliability | schema-first JSON extraction |
 
-# 🔶 GROUP 10 — Security, Safety & Governance  
-**(Enterprise & compliance)**
+## LLM Safety & Cost
 
-### Failure
-- Data leaks
-- Unsafe outputs
-- Policy violations
-
-### Patterns
-- Safe Default Pattern  
-- Policy Enforcement Pattern  
-- Content Moderation Pattern  
-- PII Detection Pattern  
-- Compliance Boundary Pattern  
-- Fail-Open vs Fail-Closed Pattern  
-
-📌 **Goal:** Enterprise-safe AI systems
+| Pattern | Goal | Practice tasks |
+|--------|------|----------------|
+| Schema-first | strict outputs | Pydantic validation + repair loop |
+| Prompt injection defense | safety | strip instructions from retrieved text |
+| Dedup | cost control | hash(query+filters) cache response |
+| Model routing | cost/perf | cheap model first; upgrade on low confidence |
+| Token budgets | guardrail | per-tenant token caps |
 
 ---
 
-# 🔷 GROUP 11 — Code Becomes Rigid & Hard to Extend  
-**(Classic GoF flexibility)**
+# How to Use This Repo (recommended workflow)
 
-### Failure
-- Every change requires rewrites
-- Tight coupling everywhere
+## Weekly rhythm
+- **3 days DSA**: 1 pattern (template + canonical + variation + redo)
+- **2 days System Design**: 1 category (build 1 mini-project slice)
+- **Weekend**: redo 2 canonicals from memory + 1 mock design talk
 
-### Patterns
-- Factory Method (GoF)  
-- Abstract Factory (GoF)  
-- Adapter Pattern (GoF)  
-- Builder Pattern (GoF)  
-- Facade Pattern (GoF)  
-- Decorator Pattern (GoF)  
-- Bridge Pattern (GoF)  
-- Iterator Pattern (GoF)  
-- Interpreter Pattern (GoF)  
-- Visitor Pattern (GoF)  
-
-📌 **Goal:** Flexible, testable, extensible code
-
----
-
-# 🔺 GROUP 12 — Scaling & Evolution  
-**(System longevity)**
-
-### Failure
-- System works today but can’t evolve
-- Breaking changes everywhere
-
-### Patterns
-- Schema Migration Pattern  
-- Data Ownership Boundary Pattern  
-- Partial Backward Compatibility Pattern  
-- Graceful Feature Rollout Pattern  
-
-📌 **Goal:** Long-lived, evolvable systems
-
----
-
-## 🧭 Final Learning Rules (IMPORTANT)
-
-- ❌ Never memorize pattern names
-- ❌ Never learn patterns in isolation
-- ✅ Always start with the failure
-- ✅ Always place the pattern in the system
-- ✅ Always explain trade-offs
-
-
-
-## ✅ Recommended Order
-
-1. Group 1 (Foundation — async, jobs, reliability)  
-2. Group 2 (Idempotency & correctness)  
-3. Group 3 (State & persistence)  
-4. Group 5 (RAG correctness)  
-5. Group 6 (Agent workflows)  
-6. Group 8 (Observability)  
-7. Group 9 (Cost & governance)  
-8. Remaining GoF groups as needed  
-
----
-
-**This README is your long-term system design compass.**  
-Revisit it as your system grows.
+## What “done” means
+A pattern is done only if you can:
+- pick it in 30 seconds (trigger recognition)
+- write the template from memory
+- solve the canonical problem without looking
+- explain the trade-offs in 60 seconds
