@@ -373,3 +373,246 @@ mindmap
 
 
 
+
+# 🧱 2 Major Projects to Master All Patterns (Step-by-Step)
+
+You will build **one core platform** + **one product surface**.
+Together they cover:
+- Reliability (timeouts/retry/circuit breaker/bulkheads)
+- Async workflows (jobs, saga, outbox, replay, DLQ)
+- API evolution (gateway, versioning, structured errors, pagination)
+- Data patterns (cache-aside, audit log, soft delete, CQRS)
+- Observability (tracing, prompt versioning, replay, metrics, cost)
+- Security (RBAC, PII redaction, moderation, fail-closed)
+- RAG patterns (chunking, hybrid, rerank, grounded, verification)
+- Multi-agent patterns (orchestrator, router, planner-executor, critic, HITL)
+- GoF patterns (factory/adapter/strategy/decorator/command/state/observer/etc.)
+
+---
+
+# PROJECT A — AgentFlow Platform (n8n-style Multi-Agent Workflow Builder)
+
+## What You’re Building
+A web + API platform where you can:
+- visually define workflows (nodes & edges like n8n)
+- run workflows as **jobs**
+- each node can be:
+  - a tool call (OCR, DB query, web fetch)
+  - an LLM step (extract, classify, summarize)
+  - an agent step (planner/executor/critic)
+- platform supports:
+  - retries, timeouts, circuit breaker
+  - idempotency + dedup
+  - audit logs + replay
+  - RBAC + PII redaction
+  - observability + token cost analytics
+
+### Core Components
+- **Gateway API (FastAPI)**
+- **Workflow Orchestrator** (state machine: LangGraph or custom)
+- **Workers** (task executors)
+- **Queue** (Service Bus / Redis / RabbitMQ)
+- **Storage**
+  - SQL: jobs, steps, audit
+  - Blob: documents & artifacts
+  - Vector DB: embeddings
+- **Observability**
+  - trace_id, logs, metrics
+  - prompt versions & replay
+
+---
+
+## Phase-by-Phase Pattern Implementation (the “step-by-step” path)
+
+### Phase 0 — Skeleton & Contracts (API cleanliness)
+**Patterns**
+- Resource-oriented design
+- Structured error pattern
+- Pagination/filtering
+- API versioning
+
+**Deliverable**
+- `/v1/workflows`, `/v1/jobs`, `/v1/runs`
+- `error_code + trace_id` on every error
+
+---
+
+### Phase 1 — Async Jobs & Reliability Spine (foundation)
+**Patterns**
+- Job/Workflow pattern
+- Long-running task pattern
+- Timeout, Retry+Backoff, Circuit Breaker
+- Partial results, Graceful degradation
+- Bulkhead (separate worker pools)
+
+**Deliverable**
+- submit workflow run → returns `job_id`
+- polling endpoint: `/v1/jobs/{job_id}`
+- retries + timeouts + circuit breaker around LLM calls
+
+---
+
+### Phase 2 — Correctness & Cost Safety (no duplicate spend)
+**Patterns**
+- Idempotency key
+- Deduplication + content hashing
+- Command pattern (each node execution is a command)
+- Singleton (config only)
+
+**Deliverable**
+- `idempotency_key` on run submit
+- `step_id = hash(job_id + node_id + input_hash)`
+- on retry storms → no duplicate LLM cost
+
+---
+
+### Phase 3 — Persistence, Restart Safety & Replay
+**Patterns**
+- Externalized state
+- Append-only audit log
+- Replay / reprocessing
+- Soft delete
+- Versioned data
+
+**Deliverable**
+- DB tables: `jobs`, `job_steps`, `workflow_versions`, `audit_events`
+- `/v1/jobs/{job_id}/replay`
+- restart workers → jobs resume safely
+
+---
+
+### Phase 4 — Eventing & Scalability
+**Patterns**
+- Pub/Sub
+- Outbox
+- DLQ
+- Backpressure
+- Saga (compensating steps)
+
+**Deliverable**
+- publish `job.created`, `step.completed`, `job.failed`
+- DLQ for poisoned messages
+- backpressure: max concurrency + queue depth alarms
+
+---
+
+### Phase 5 — Observability & Trust (debug “why model said this”)
+**Patterns**
+- Distributed tracing
+- Prompt versioning
+- Replayable execution
+- Metrics & SLOs
+- Cost attribution
+
+**Deliverable**
+- every run has `trace_id`
+- prompt hash stored per step
+- token usage per tenant per workflow
+- dashboard: latency, failure rate, top spenders
+
+---
+
+### Phase 6 — Security & Governance (enterprise hardening)
+**Patterns**
+- RBAC
+- Secret management
+- PII detection + redaction
+- Moderation gate
+- Fail-closed defaults
+- Compliance boundary
+
+**Deliverable**
+- role-based access: viewer/editor/admin
+- PII redaction before logs/storage
+- moderation pre/post guard
+
+---
+
+### Phase 7 — AI Patterns (RAG + Agents as workflow nodes)
+**RAG Patterns**
+- Chunking, metadata-first filtering
+- Hybrid retrieval, re-ranking
+- Context budgeting, grounded generation
+- Verification (“not found → null”)
+
+**Agent Patterns**
+- Orchestrator node
+- Router agent node
+- Planner → Executor node
+- Critic/Verifier node
+- HITL escalation node
+
+**Deliverable**
+- “RAG Search” node supports citations
+- “Doc Extractor” node outputs strict JSON schema
+- “Agent Supervisor” enforces step limits
+
+---
+
+## GoF Patterns Used (explicit mapping)
+- **Factory/Abstract Factory**: create provider implementations (OpenAI/Azure)
+- **Adapter**: unify provider interfaces
+- **Builder**: prompt builder / workflow builder
+- **Facade**: `AgentFlowClient` simplified SDK
+- **Decorator**: add logging/token-tracking to tool calls
+- **Proxy**: caching/rate limit wrapper
+- **Strategy**: retrieval strategy switching (vector vs hybrid)
+- **Command**: each node run is a command with retries
+- **State**: circuit breaker + workflow states
+- **Observer**: tracing hooks/events
+- **Mediator**: multi-agent coordination
+
+---
+
+## “Done” Definition (AgentFlow)
+You can:
+- demo a workflow running async with retries
+- show dedup prevents double LLM spend
+- replay a run exactly with same prompt versions
+- trace a failure end-to-end
+- enforce RBAC + PII protection
+
+---
+
+# PROJECT B — EvidenceChat (RAG Chatbot + Agent Tools) Built on AgentFlow
+
+## What You’re Building
+A product layer that uses AgentFlow:
+- chat UI
+- uploads PDFs
+- grounded answers with citations
+- tool-using agent (search, summarize, compare docs)
+- admin dashboard: usage, cost, quality
+
+### Why This Project Matters
+This is what recruiters understand immediately:
+**“Production RAG chatbot with observability, cost controls, safety, and workflow orchestration.”**
+
+---
+
+## Step-by-Step Features (maps to patterns)
+1) **Naive chat** (baseline)  
+2) Add **RAG** (chunking + citations)  
+3) Add **hybrid + rerank** (quality jump)  
+4) Add **verification** (hallucination control)  
+5) Add **agent tools** (planner/executor)  
+6) Add **HITL** (low confidence escalations)  
+7) Add **quotas + budgets** (cost safety)  
+8) Add **trace + replay** (trust/debug)  
+9) Add **RBAC + PII redaction** (enterprise-ready)
+
+---
+
+# Suggested Tech Stack (matches your style)
+- FastAPI + Pydantic
+- SQLAlchemy + Postgres/Azure SQL
+- Redis queue / Azure Service Bus
+- Blob storage (Azure Blob)
+- Vector DB (FAISS/Azure AI Search)
+- LangGraph for orchestration (optional)
+- OpenTelemetry + Langfuse style traces (or custom)
+
+---
+
+
+
