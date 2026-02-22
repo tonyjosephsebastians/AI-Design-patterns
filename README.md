@@ -215,165 +215,6 @@ If you cannot build it, you do not own it.
 ---
 
 
-# 📌 Final Principle
-
-Learn patterns by:
-
-Trigger → Failure → Fix → Refactor → Teach
-
-Not by memorizing names.
-
----
-
-This README is your long-term interview compass.
-Build. Break. Fix. Repeat.
-
-
-
-
-
-# 🧠 Master Interview Pattern Framework — Mind Map
-
-```mermaid
-mindmap
-  root((Mastery Framework))
-
-    DSA Patterns
-      Two Pointers
-        Opposite Direction
-        Same Direction
-        Partitioning
-      Sliding Window
-        Fixed Window
-        Variable Window
-        Frequency Map
-      Fast & Slow
-        Cycle Detection
-        Middle Node
-      Binary Search
-        Classic
-        Boundaries
-        Search on Answer
-      Tree
-        DFS
-        BFS
-      Graph
-        DFS
-        BFS
-        Topological Sort
-        Union Find
-      Backtracking
-        Subsets
-        Permutations
-        Pruning
-      Heap
-        Top K
-        Merge K
-      Dynamic Programming
-        1D
-        2D
-        Knapsack
-        LIS
-      Prefix Sum
-        Hashmap Prefix
-        2D Prefix
-      Monotonic Stack
-        Next Greater
-        Histogram
-      Greedy
-        Intervals
-        Jump Game
-        Resource Allocation
-
-    System Design
-      Reliability
-        Timeout
-        Retry + Backoff
-        Circuit Breaker
-        Bulkhead
-        Rate Limiting
-        Graceful Degradation
-      Distributed Systems
-        Async Job Pattern
-        Idempotency Key
-        Deduplication
-        Saga
-        Backpressure
-      API Design
-        API Gateway
-        Versioning
-        Structured Errors
-        Pagination
-      Data Layer
-        Cache Aside
-        CQRS
-        Audit Log
-        Soft Delete
-      Observability
-        Tracing
-        Metrics
-        Replay
-        Cost Tracking
-      Security
-        RBAC
-        PII Detection
-        Moderation
-        Fail Closed
-
-    AI Engineering
-      RAG
-        Chunking
-        Metadata Filtering
-        Hybrid Retrieval
-        Re Ranking
-        Context Budgeting
-        Grounded Generation
-        Verification
-      Multi Agent
-        Orchestrator
-        Router Agent
-        Planner Executor
-        Critic Agent
-        Human in Loop
-      LLM Safety
-        Schema Validation
-        Prompt Injection Defense
-        Model Routing
-        Token Budget
-
-    GoF Patterns
-      Creational
-        Factory
-        Abstract Factory
-        Builder
-        Singleton
-      Structural
-        Adapter
-        Facade
-        Decorator
-        Proxy
-        Bridge
-        Composite
-      Behavioral
-        Strategy
-        Template Method
-        Chain of Responsibility
-        Command
-        Observer
-        Mediator
-        State
-        Visitor
-
-    Learning Method
-      Trigger Failure
-      Apply Pattern
-      Refactor
-      Teach Back
-      Repeat
-
-
-
-
 # 🧱 2 Major Projects to Master All Patterns (Step-by-Step)
 
 You will build **one core platform** + **one product surface**.
@@ -613,6 +454,165 @@ This is what recruiters understand immediately:
 - OpenTelemetry + Langfuse style traces (or custom)
 
 ---
+
+
+# 📌 Final Principle
+
+Learn patterns by:
+
+Trigger → Failure → Fix → Refactor → Teach
+
+Not by memorizing names.
+
+---
+
+This README is your long-term interview compass.
+Build. Break. Fix. Repeat.
+
+
+
+
+
+# 🧠 Master Interview Pattern Framework — Mind Map
+
+```mermaid
+mindmap
+  root((Mastery Framework))
+
+    DSA Patterns
+      Two Pointers
+        Opposite Direction
+        Same Direction
+        Partitioning
+      Sliding Window
+        Fixed Window
+        Variable Window
+        Frequency Map
+      Fast & Slow
+        Cycle Detection
+        Middle Node
+      Binary Search
+        Classic
+        Boundaries
+        Search on Answer
+      Tree
+        DFS
+        BFS
+      Graph
+        DFS
+        BFS
+        Topological Sort
+        Union Find
+      Backtracking
+        Subsets
+        Permutations
+        Pruning
+      Heap
+        Top K
+        Merge K
+      Dynamic Programming
+        1D
+        2D
+        Knapsack
+        LIS
+      Prefix Sum
+        Hashmap Prefix
+        2D Prefix
+      Monotonic Stack
+        Next Greater
+        Histogram
+      Greedy
+        Intervals
+        Jump Game
+        Resource Allocation
+
+    System Design
+      Reliability
+        Timeout
+        Retry + Backoff
+        Circuit Breaker
+        Bulkhead
+        Rate Limiting
+        Graceful Degradation
+      Distributed Systems
+        Async Job Pattern
+        Idempotency Key
+        Deduplication
+        Saga
+        Backpressure
+      API Design
+        API Gateway
+        Versioning
+        Structured Errors
+        Pagination
+      Data Layer
+        Cache Aside
+        CQRS
+        Audit Log
+        Soft Delete
+      Observability
+        Tracing
+        Metrics
+        Replay
+        Cost Tracking
+      Security
+        RBAC
+        PII Detection
+        Moderation
+        Fail Closed
+
+    AI Engineering
+      RAG
+        Chunking
+        Metadata Filtering
+        Hybrid Retrieval
+        Re Ranking
+        Context Budgeting
+        Grounded Generation
+        Verification
+      Multi Agent
+        Orchestrator
+        Router Agent
+        Planner Executor
+        Critic Agent
+        Human in Loop
+      LLM Safety
+        Schema Validation
+        Prompt Injection Defense
+        Model Routing
+        Token Budget
+
+    GoF Patterns
+      Creational
+        Factory
+        Abstract Factory
+        Builder
+        Singleton
+      Structural
+        Adapter
+        Facade
+        Decorator
+        Proxy
+        Bridge
+        Composite
+      Behavioral
+        Strategy
+        Template Method
+        Chain of Responsibility
+        Command
+        Observer
+        Mediator
+        State
+        Visitor
+
+    Learning Method
+      Trigger Failure
+      Apply Pattern
+      Refactor
+      Teach Back
+      Repeat
+
+
 
 
 
