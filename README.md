@@ -1,179 +1,228 @@
+# 🧠 Master AI Pattern Library  
 
-A practical pattern map:
-- **13 Core DSA Patterns** (with sub-patterns)
-- **AI/System Design Patterns** (reliability, scalability, RAG/agents, observability)
-- Built for **fast recall + repeatable practice**
+This repository is a **failure-driven learning system** for mastering:
 
----
+- ✅ 13 Core DSA Patterns  
+- ✅ AI / RAG / Multi-Agent Architecture Patterns  
+- ✅ Distributed System & Reliability Patterns  
+- ✅ GoF Design Patterns (Creational, Structural, Behavioral)  
 
-## How to study (simple + effective)
-**Per pattern (60–75 min):**
-1) Write **template from memory** (10m)  
-2) Solve **1 canonical** problem/task (25m)  
-3) Solve **1 variation** (20m)  
-4) **Teach-back notes** (5m)  
-5) Next day: **redo canonical** (10m)
+This is not theory.
+
+This is an execution blueprint for becoming a **Senior AI / Backend Engineer**.
 
 ---
 
-# DSA Patterns (13 Core)
+# 🎯 How To Study (Correct Way)
 
-| # | Pattern | Triggers (spot it fast) | Sub-patterns | Canonical (start here) | Variations (pick 1) |
-|---|---------|--------------------------|--------------|------------------------|---------------------|
-| 1 | Two Pointers | sorted, palindrome, pair sum, partition | opposite L/R; same dir; partition; pair in sorted | **Valid Palindrome (125)** | **3Sum (15)** / **Container (11)** |
-| 2 | Sliding Window | substring/subarray, longest/shortest, at most/at least | fixed; variable; freq map; constraints | **Longest Substring w/o Repeat (3)** | **Permutation in String (567)** / **Min Window (76)** |
-| 3 | Fast/Slow Pointers | cycles, repeated state, linked list middle | cycle detect; entry; middle; happy number | **Linked List Cycle (141)** | **Cycle II (142)** / **Happy Number (202)** |
-| 4 | Binary Search | sorted, monotonic, “min/max answer” | classic; left bound; right bound; rotated; answer space | **Binary Search (704)** | **Rotated Search (33)** / **Peak (162)** |
-| 5 | Tree DFS | recursion, path, subtree, height | preorder/in/post; top-down; bottom-up; path; tree DP | **Max Depth (104)** | **Validate BST (98)** / **Max Path Sum (124)** |
-| 6 | Tree BFS | level order, shortest in tree | level order; zigzag; multi-source; parent pointers | **Level Order (102)** | **Zigzag (103)** / **Distance K (863)** |
-| 7 | Graph DFS/BFS | components, reachability, deps, shortest | dfs visited; bfs; multi-source; topo; union-find | **Number of Islands (200)** | **Course Schedule (207)** / **Word Ladder (127)** |
-| 8 | Backtracking | generate all, constraints, search tree | subsets; perms; combs; prune; grid; dup skip | **Subsets (78)** | **Combination Sum (39)** / **N-Queens (51)** |
-| 9 | Heap / PQ | top-k, merge-k, scheduling | min/max; top-k; k-merge; two heaps; scheduling | **Top K Frequent (347)** | **Kth Largest (215)** / **Merge K Lists (23)** |
-| 10 | DP | optimal + overlap | 1D; 2D; knapsack; LIS; interval; tree; bitmask | **Climbing Stairs (70)** | **Coin Change (322)** / **Edit Distance (72)** |
-| 11 | Prefix Sum | range sum, subarray sum=k | 1D; hashmap prefix; 2D; diff array | **Subarray Sum = K (560)** | **Product Except Self (238)** / **2D sum (304)** |
-| 12 | Monotonic Stack | next greater, histogram, spans | inc/dec; NGE; histogram; maximal rectangle | **Daily Temps (739)** | **Histogram (84)** / **Max Rectangle (85)** |
-| 13 | Greedy | local best → global, intervals | intervals; sort+pick; jump; circular; greedy+heap | **Merge Intervals (56)** | **Jump Game (55)** / **Gas Station (134)** |
+## The 60–75 Minute Pattern Loop
 
-> Tip: For each pattern, your “canonical” is the one you redo from memory after 24 hours.
+For each pattern:
+
+1. Write the **template from memory** (10m)
+2. Solve **1 canonical problem / task** (25m)
+3. Solve **1 variation** (20m)
+4. Write 5-line **teach-back summary** (5m)
+5. Next day: redo canonical from memory (10m)
+
+If you cannot:
+- Write the skeleton
+- Explain the invariant
+- Place it inside a system
+
+You do not know it yet.
 
 ---
 
-# AI/System Design Patterns
+# 🧱 PART 1 — 13 Core DSA Patterns
+
+| # | Pattern | Triggers | Sub-Patterns | Canonical | Variation |
+|---|----------|----------|--------------|------------|------------|
+| 1 | Two Pointers | sorted, palindrome, partition | L/R; same dir; partition | Valid Palindrome (125) | 3Sum (15) |
+| 2 | Sliding Window | substring, longest/shortest | fixed; variable; freq map | Longest Substring (3) | Min Window (76) |
+| 3 | Fast/Slow | cycles, middle | cycle detect; entry | Linked List Cycle (141) | Cycle II (142) |
+| 4 | Binary Search | sorted, monotonic | left/right bound; answer space | Binary Search (704) | Rotated Search (33) |
+| 5 | Tree DFS | recursion, subtree | top-down; bottom-up | Max Depth (104) | Validate BST (98) |
+| 6 | Tree BFS | level traversal | zigzag; multi-source | Level Order (102) | Distance K (863) |
+| 7 | Graph DFS/BFS | components, deps | topo; union-find | Number of Islands (200) | Course Schedule (207) |
+| 8 | Backtracking | generate all | subsets; perms; prune | Subsets (78) | N-Queens (51) |
+| 9 | Heap | top-k, merge-k | min/max; 2-heaps | Top K Frequent (347) | Merge K Lists (23) |
+| 10 | DP | optimal + overlap | 1D; 2D; knapsack; LIS | Climbing Stairs (70) | Coin Change (322) |
+| 11 | Prefix Sum | range sum, subarray=k | hashmap prefix | Subarray Sum = K (560) | 2D Range Sum (304) |
+| 12 | Monotonic Stack | next greater | inc/dec stack | Daily Temps (739) | Histogram (84) |
+| 13 | Greedy | local→global | intervals; jump | Merge Intervals (56) | Jump Game (55) |
+
+---
+
+# 🏗 PART 2 — System Design Patterns (Distributed & Reliability)
 
 ## Reliability & Resilience
 
-| Pattern | When to use | Implementation tasks (practice) |
-|--------|-------------|----------------------------------|
-| Timeout | calls can hang | Add per-call timeout + global SLA timeout |
-| Retry + Backoff (+ jitter) | transient failures (429/5xx) | Retry only idempotent ops; add jitter |
-| Circuit Breaker | cascading failures | Open/half-open/close states + metrics |
-| Bulkhead | isolate failures | Separate worker pools for OCR vs LLM |
-| Rate Limiting | protect system | per-tenant token bucket |
-| Graceful Degradation | partial availability | fallback model, partial answer, “cannot determine” |
-| Partial Results | long workflows | return partial extraction + status link |
-| Load Shedding | overload | reject low-priority jobs early |
+| Pattern | When To Use | Practice Task |
+|----------|------------|---------------|
+| Timeout | calls hang | add per-call timeout |
+| Retry + Backoff | transient failures | exponential retry with jitter |
+| Circuit Breaker | cascading failure | open/half-open state logic |
+| Bulkhead | isolate services | separate worker pools |
+| Rate Limiting | protect system | token bucket per tenant |
+| Graceful Degradation | partial failure | fallback model |
+| Load Shedding | overload | reject low priority jobs |
 
 ---
 
-## Distributed Workflows & Async
+## Distributed Workflows
 
-| Pattern | When to use | Practice tasks (mini-project) |
-|--------|-------------|--------------------------------|
-| Job/Workflow | long tasks | job_id + step states in SQL |
-| Long-running task | > request time | async submit + polling/webhook |
-| Idempotency key | retries happen | idempotency on submit endpoint |
-| Dedup (hashing) | duplicate requests | hash(input) → reuse result |
-| Outbox | reliable events | write to DB + publish later |
-| Backpressure | queues grow | limit concurrency + queue depth alarms |
-| Saga | multi-step with rollback | compensating actions per step |
+| Pattern | When To Use | Practice Task |
+|----------|------------|---------------|
+| Job / Workflow | long tasks | async job queue |
+| Idempotency Key | retries happen | prevent duplicate job |
+| Deduplication | cost control | hash request body |
+| Outbox Pattern | reliable events | DB + async publish |
+| Saga | multi-step rollback | compensating actions |
+| Backpressure | queue overflow | concurrency limits |
 
 ---
 
 ## API Design & Evolution
 
-| Pattern | When to use | Practice tasks |
-|--------|-------------|----------------|
-| API Gateway | single entrypoint | auth, rate limit, routing, request-id |
-| BFF | multiple clients | mobile vs web tailored payloads |
-| Versioning | breaking changes | `/v1`, `/v2` + compatibility layer |
-| Structured errors | consistent handling | error codes + trace_id + user message |
-| Pagination/filtering | list endpoints | cursor pagination + filters |
-| Contract testing | prevent breakage | tests for response schema |
-
----
-
-## Data, Storage & Caching
-
-| Pattern | When to use | Practice tasks |
-|--------|-------------|----------------|
-| Cache-aside | repeated reads | cache retrieval results by hash |
-| CQRS | heavy reads | read model for dashboard |
-| Audit log | compliance | append-only `audit_events` table |
-| Soft delete | restore + audit | `deleted_at` + filters |
-| Immutable blob + metadata DB | documents | store PDF in blob, metadata in SQL |
-
----
-
-## Streaming & Eventing
-
-| Pattern | When to use | Practice tasks |
-|--------|-------------|----------------|
-| Pub/Sub | async fanout | “doc_uploaded” → multiple consumers |
-| DLQ | poison messages | move failed jobs after N retries |
-| Replay | reprocessing | re-run pipeline from stored steps |
+| Pattern | Purpose | Practice |
+|----------|--------|----------|
+| API Gateway | single entrypoint | auth + routing |
+| BFF | client-specific APIs | mobile/web separation |
+| Versioning | breaking changes | /v1, /v2 |
+| Structured Errors | consistent failures | error_code + trace_id |
+| Pagination | scalable lists | cursor pagination |
 
 ---
 
 ## Observability & Governance
 
-| Pattern | Why it matters | Practice tasks |
-|--------|-----------------|----------------|
-| Tracing | explain failures | trace_id across gateway → workers |
-| Prompt versioning | reproduce outputs | store prompt template hash + params |
-| Replay | debug “why model said this” | run same inputs with same prompt+model |
-| Metrics | SLOs | latency, success rate, cost per job |
-| Cost observability | billing control | tokens per tenant per endpoint |
+| Pattern | Purpose | Practice |
+|----------|--------|----------|
+| Tracing | debug systems | trace_id across services |
+| Prompt Versioning | reproducibility | store template hash |
+| Replay | debug AI answers | rerun same inputs |
+| Metrics | SLO tracking | latency + token usage |
+| Cost Attribution | billing control | per-tenant token logs |
 
 ---
 
-## Security & Compliance
-
-| Pattern | When to use | Practice tasks |
-|--------|-------------|----------------|
-| RBAC | enterprise | role-based access per tenant |
-| Secrets mgmt | no hardcoding | Key Vault + rotation |
-| PII redaction | sensitive docs | regex+NER → redact before logs |
-| Policy enforcement | unsafe outputs | fail-closed on violations |
-| Content moderation | safety | pre/post moderation gates |
-
----
-
-# LLM/RAG/Agentic Patterns (AI Engineer)
+# 🤖 PART 3 — AI / RAG / Multi-Agent Patterns
 
 ## RAG Core
 
-| Pattern | Goal | Practice tasks |
-|--------|------|----------------|
-| Chunking | better recall | chunk by headings/pages; store chunk_id |
-| Metadata-first | reduce noise | filter by doc_type, date, tenant |
-| Hybrid retrieval | best recall | combine BM25 + vector |
-| Re-ranking | boost relevance | rerank top-20 to top-5 |
-| Context budgeting | fit tokens | compress + top-k cap |
-| Grounded generation | citations | answer with chunk_id citations |
-| Verification | reduce hallucinations | “not found → null” rule |
-
-## Multi-Agent Workflows
-
-| Pattern | Goal | Practice tasks |
-|--------|------|----------------|
-| Orchestrator | control flow | LangGraph state machine |
-| Router agent | route tasks | doc_type/confidence routing |
-| Plan & execute | structured steps | planner outputs plan JSON |
-| Critic/verifier | quality gate | verify schema + evidence |
-| HITL escalation | safety | route low confidence to review |
-| Deterministic outputs | reliability | schema-first JSON extraction |
-
-## LLM Safety & Cost
-
-| Pattern | Goal | Practice tasks |
-|--------|------|----------------|
-| Schema-first | strict outputs | Pydantic validation + repair loop |
-| Prompt injection defense | safety | strip instructions from retrieved text |
-| Dedup | cost control | hash(query+filters) cache response |
-| Model routing | cost/perf | cheap model first; upgrade on low confidence |
-| Token budgets | guardrail | per-tenant token caps |
+| Pattern | Purpose | Practice |
+|----------|--------|----------|
+| Chunking | better recall | chunk by headings |
+| Metadata Filtering | reduce noise | filter by doc_type |
+| Hybrid Retrieval | best recall | BM25 + vector |
+| Re-ranking | improve relevance | rerank top 20 |
+| Context Budgeting | token limit | top-k cap |
+| Grounded Generation | reduce hallucination | cite chunk_id |
+| Verification | safe answers | null if not found |
 
 ---
 
+## Multi-Agent Workflows
 
-## Weekly rhythm
-- **3 days DSA**: 1 pattern (template + canonical + variation + redo)
-- **2 days System Design**: 1 category (build 1 mini-project slice)
-- **Weekend**: redo 2 canonicals from memory + 1 mock design talk
+| Pattern | Purpose | Practice |
+|----------|--------|----------|
+| Orchestrator | control flow | state machine |
+| Router Agent | dispatch tasks | route by confidence |
+| Planner → Executor | structured steps | plan JSON |
+| Critic Agent | validation | verify output schema |
+| Human-in-the-Loop | safety | escalate low confidence |
+| Deterministic Output | reliability | schema-first extraction |
 
-## What “done” means
-A pattern is done only if you can:
-- pick it in 30 seconds (trigger recognition)
-- write the template from memory
-- solve the canonical problem without looking
-- explain the trade-offs in 60 seconds
+---
+
+## LLM Safety & Cost
+
+| Pattern | Purpose | Practice |
+|----------|--------|----------|
+| Schema Validation | strict output | Pydantic validation |
+| Prompt Injection Defense | safety | strip instructions |
+| Response Cache | cost control | hash(query) cache |
+| Model Routing | optimize cost | cheap-first strategy |
+| Token Budgets | guardrail | per-tenant cap |
+
+---
+
+# 🧩 PART 4 — GoF Design Patterns (Clean Architecture)
+
+## Creational
+
+| Pattern | Use Case |
+|----------|----------|
+| Factory | dynamic model selection |
+| Abstract Factory | multi-provider system |
+| Builder | prompt construction |
+| Singleton | config manager |
+| Prototype | clone agent config |
+
+## Structural
+
+| Pattern | Use Case |
+|----------|----------|
+| Adapter | unify provider interfaces |
+| Facade | simplify RAG pipeline |
+| Decorator | add logging/token tracking |
+| Proxy | caching / rate limiting |
+| Bridge | abstraction vs implementation |
+| Composite | workflow tree |
+
+## Behavioral
+
+| Pattern | Use Case |
+|----------|----------|
+| Strategy | retrieval switching |
+| Template Method | base agent execution |
+| Chain of Responsibility | moderation pipeline |
+| Command | async job object |
+| Observer | tracing events |
+| Mediator | multi-agent coordination |
+| State | workflow state machine |
+| Visitor | analytics over workflow |
+| Interpreter | policy rule engine |
+
+---
+
+# 🧭 Unified Failure-Driven Roadmap
+
+| Phase | Focus |
+|--------|--------|
+| Phase 1 | Reliability (Timeout, Retry, Async, Idempotency) |
+| Phase 2 | RAG Correctness |
+| Phase 3 | Multi-Agent Orchestration |
+| Phase 4 | Observability + Cost |
+| Phase 5 | GoF Refactoring |
+| Parallel | 13 DSA Patterns |
+
+---
+
+# 🏁 Definition of Mastery
+
+You can:
+
+- Recognize pattern in 30 seconds
+- Write skeleton from memory
+- Solve canonical problem without help
+- Explain trade-offs clearly
+- Apply it inside real AI architecture
+
+If you cannot build it, you do not own it.
+
+---
+
+# 📌 Final Principle
+
+Learn patterns by:
+
+Trigger → Failure → Fix → Refactor → Teach
+
+Not by memorizing names.
+
+---
+
+This README is your long-term interview compass.
+Build. Break. Fix. Repeat.
