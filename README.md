@@ -215,6 +215,22 @@ If you cannot build it, you do not own it.
 ---
 
 
+# 📌 Final Principle
+
+Learn patterns by:
+
+Trigger → Failure → Fix → Refactor → Teach
+
+Not by memorizing names.
+
+---
+
+This README is your long-term interview compass.
+Build. Break. Fix. Repeat.
+
+
+
+
 
 # 🧠 Master Interview Pattern Framework — Mind Map
 
@@ -357,16 +373,3 @@ mindmap
 
 
 
-
-# 📌 Final Principle
-
-Learn patterns by:
-
-Trigger → Failure → Fix → Refactor → Teach
-
-Not by memorizing names.
-
----
-
-This README is your long-term interview compass.
-Build. Break. Fix. Repeat.
