@@ -1,14 +1,10 @@
-# Agentic Design Patterns — Practical Markdown Guide (21 Patterns)
+# Agentic Design Patterns — Architecture Diagrams (Mermaid) + Practical Guide (21 Patterns)
 
-This document summarizes the **21 agentic design patterns** from *Agentic Design Patterns: A Hands‑On Guide to Building Intelligent Systems* (Antonio Gulli).  
-For each pattern you’ll find:
+This is a **Mermaid-first Markdown guide** to the **21 agentic design patterns**.  
+Each pattern includes a **Mermaid architecture diagram**, plus: **what it is**, **how it works**, **pros/cons**, **when to use**, and **examples**.
 
-- A **simple diagram** (Markdown-friendly)
-- **What it is**
-- **How it works** (step-by-step)
-- **Pros / Cons**
-- **When to use**
-- **Examples** (practical, easy to map to real systems)
+> Mermaid diagrams render in many Markdown viewers (GitHub, GitLab, Obsidian, Notion-with-plugin, etc.).  
+> If your viewer doesn’t render Mermaid, you’ll still see the diagram source code.
 
 ---
 
@@ -40,764 +36,817 @@ For each pattern you’ll find:
 
 ## 1) Prompt Chaining (Pipeline)
 
-```text
-[Input]
-  |
-  v
-[Step 1 Prompt] -> [Step 2 Prompt] -> [Step 3 Prompt] -> ... -> [Final Output]
+```mermaid
+flowchart TD
+A[Input] --> B[Step 1 Prompt\n(e.g., summarize)]
+B --> C[Step 2 Prompt\n(e.g., extract structured data)]
+C --> D[Step 3 Prompt\n(e.g., format output)]
+D --> E[Final Output]
 ```
 
 **What it is**  
-Break one big task into a sequence of smaller prompts, where each step produces a cleaner intermediate result for the next.
+Split a complex task into a sequence of smaller prompts; each step produces a stable intermediate artifact for the next step.
 
 **How it works**
-1. Define the final objective (what “done” looks like).
-2. Split it into 2–6 smaller sub-tasks that each produce a useful intermediate artifact.
-3. Make each step output structured data (bullets/JSON/table) so downstream prompts are stable.
-4. Run steps in order; keep logs of intermediate outputs.
-5. Optionally add validation at each step (schema checks, “must include X”, etc.).
+1. Define the final objective (“done” criteria).
+2. Break into 2–6 sub-steps with clear intermediate outputs.
+3. Enforce structure at each step (bullets/JSON/table).
+4. Run steps in order; log intermediate outputs.
+5. Add validation gates where needed (schema checks, required fields).
 
 **Pros**
-- Easier to debug (you can inspect each step’s output)
-- Higher reliability than one massive prompt
-- Lets you enforce structure gradually
+- Easy debugging (inspect each step)
+- More reliable than one giant prompt
+- Great for enforcing structure gradually
 
 **Cons**
-- More latency/cost (multiple calls)
-- Errors can cascade if early steps are wrong
+- More latency/cost
+- Early mistakes can propagate downstream
 
 **When to use**
-- Any multi-step work: summarization → extraction → formatting, analysis → decision → action, etc.
+- Multi-step transforms: summarize → extract → compute → format.
 
 **Example**
-- “Analyze a report” pipeline:
-  1) Summarize key sections  
-  2) Extract metrics + dates  
-  3) Create an executive summary + action list  
+- “Analyze a PDF”: (1) summarize sections → (2) extract metrics/dates → (3) generate executive summary + actions.
 
 ---
 
 ## 2) Routing
 
-```text
-             /--> [Workflow A]
-[Input] ---> [Router]
-             \--> [Workflow B]
-                  \--> [Ask clarifying question / fallback]
+```mermaid
+flowchart TD
+I[User Request / Input] --> R{Router\n(intent + confidence)}
+R -->|Type A| A[Workflow A\n(e.g., Q&A)]
+R -->|Type B| B[Workflow B\n(e.g., coding)]
+R -->|Type C| C[Workflow C\n(e.g., retrieval)]
+R -->|Low confidence| Q[Ask Clarifying Question]
+A --> O[Output]
+B --> O
+C --> O
+Q --> I
 ```
 
 **What it is**  
-A “traffic controller” that decides which tool/agent/workflow should handle a request.
+A decision layer that chooses the best workflow/tool/agent based on intent, complexity, or risk.
 
 **How it works**
-1. Extract signals from the request (intent, domain, urgency, confidence).
-2. Classify the request into a route (rules, model-based classifier, or hybrid).
-3. Execute the chosen workflow.
-4. If confidence is low, ask a clarifying question or go to a safe fallback path.
+1. Extract signals (intent, domain, urgency, confidence).
+2. Choose route using rules, a classifier, or hybrid logic.
+3. Execute the selected workflow.
+4. Fallback when uncertain (clarify, safe default, or escalation).
 
 **Pros**
-- Scales to many use cases without one giant prompt
-- You can specialize workflows (e.g., math vs. writing vs. coding)
+- Scales across many tasks without one giant prompt
+- Enables specialization (each route can be tuned)
 
 **Cons**
-- Misrouting hurts quality
-- Requires labels/evals to tune routes
+- Misrouting lowers quality
+- Needs evals/labels to tune thresholds
 
 **When to use**
-- You have multiple tools/agents and need the system to choose the best one.
+- You have multiple tools/agents and need automatic selection.
 
 **Example**
-- User asks: “Explain this concept” → writing/explainer route  
-- User asks: “Calculate monthly payment” → calculator tool route  
+- “Calculate mortgage” → calculator tool route  
+- “Explain RAG” → explainer route
 
 ---
 
 ## 3) Parallelization
 
-```text
-                 /-> [Task A] --\
-[Input] -> [Fork] -> [Task B] ----> [Merge] -> [Output]
-                 \-> [Task C] --/
+```mermaid
+flowchart TD
+I[Input] --> F[Fork]
+F --> A[Task A\n(e.g., retrieve source 1)]
+F --> B[Task B\n(e.g., retrieve source 2)]
+F --> C[Task C\n(e.g., retrieve source 3)]
+A --> J[Join / Merge]
+B --> J
+C --> J
+J --> O[Output]
 ```
 
 **What it is**  
-Run independent sub-tasks simultaneously, then combine results.
+Run independent subtasks concurrently and merge outputs.
 
 **How it works**
-1. Identify sub-tasks that do not depend on each other.
-2. Run them concurrently (threads/async/jobs).
-3. Merge outputs using a “join” step (rank, vote, dedupe, summarize).
+1. Identify independent subtasks (no dependencies).
+2. Run concurrently (async jobs, threads, workers).
+3. Merge via a join step (dedupe, rank, vote, summarize).
 
 **Pros**
-- Faster end-to-end latency
-- Good for multi-source checks or multi-document processing
+- Lower end-to-end latency
+- Strong for multi-source checks and batch processing
 
 **Cons**
 - Harder tracing/debugging
-- Merge step can become messy (conflicts, duplicates)
+- Merge conflicts need careful handling
 
 **When to use**
-- “Fetch N things, then combine” patterns.
+- “Fetch N things then combine.”
 
 **Example**
-- Retrieve from 3 knowledge sources at once and merge into a single answer.
+- Retrieve from 3 knowledge stores in parallel, then rerank and answer.
 
 ---
 
 ## 4) Reflection (Generate → Critique → Refine)
 
-```text
-[Draft] -> [Critique] -> [Revise] -> (loop) -> [Final]
+```mermaid
+flowchart TD
+D[Draft Output] --> C[Critique / Review\n(check requirements, errors)]
+C -->|Needs improvement| R[Revise using critique]
+R --> D
+C -->|Meets criteria| O[Final Output]
 ```
 
 **What it is**  
-An improvement loop: produce a draft, review it, then revise.
+An improvement loop: produce a draft, critique it, then revise until it meets quality criteria.
 
 **How it works**
 1. Generate a first draft.
-2. Run a critic step:
-   - check for missing requirements
-   - check logic gaps
-   - check formatting constraints
-3. Revise with explicit instructions from critique.
-4. Stop after N loops or when a score/criteria is met.
+2. Run a critic pass (missing requirements, logic gaps, format rules).
+3. Revise with explicit corrections.
+4. Stop after N loops or when a score passes.
 
 **Pros**
-- Better quality for writing, reasoning, code, and structured outputs
-- Catches missing requirements early
+- Higher quality and fewer mistakes
+- Great for writing, reasoning, code, and structured outputs
 
 **Cons**
-- More tokens/time
-- Needs a stopping rule (or it can loop too much)
+- More latency/tokens
+- Needs a stopping rule to avoid endless looping
 
 **When to use**
-- When quality matters more than speed, or outputs must meet strict requirements.
+- Strict requirements or high-quality writing/code output.
 
 **Example**
-- Write a cover letter → critique for tone + missing keywords → rewrite.
+- Draft a resume bullet → critique for STAR + metrics → rewrite.
 
 ---
 
 ## 5) Tool Use (Function Calling)
 
-```text
-[User Request]
-   |
-   v
-[LLM chooses tool + args]
-   |
-   v
-[Tool runs] -> [Result]
-   |
-   v
-[LLM uses result] -> [Answer / Next step]
+```mermaid
+sequenceDiagram
+autonumber
+participant U as User
+participant L as LLM/Agent
+participant T as Tool/API
+U->>L: Request
+L->>L: Decide tool + arguments
+L->>T: Call tool(args)
+T-->>L: Tool result
+L-->>U: Answer using result
 ```
 
 **What it is**  
-Let the model call external tools (APIs, calculators, DB, file system, web search) to get accurate results and take actions.
+The agent calls external tools (APIs, DB, calculators, file ops) for accurate data and actions.
 
 **How it works**
-1. Define a limited set of tools with clear schemas.
-2. LLM selects the right tool and structured arguments.
-3. Tool executes and returns a result.
-4. LLM uses the result to answer (or to decide the next tool call).
+1. Define tool schemas and permissions (allowlists).
+2. LLM selects tool + structured args.
+3. Tool runs and returns results.
+4. LLM uses results to answer or decide next step.
 
 **Pros**
 - Accurate computations and real data access
-- Extends model capability beyond “text only”
+- Extends capability beyond model memory
 
 **Cons**
-- Security and permissions are critical
-- Tool failures must be handled gracefully
+- Security risk without strict permissions
+- Tool failures must be handled
 
 **When to use**
-- Anytime the answer depends on external truth: databases, current data, calculations, file transforms.
+- Anything requiring external truth (DB, files, current info) or precise calculation.
 
 **Example**
-- Convert a PDF → extract tables → compute totals → generate summary.
+- PDF → extract tables → compute totals → generate summary.
 
 ---
 
 ## 6) Planning
 
-```text
-[Goal] -> [Plan steps] -> [Execute step-by-step]
-                 ^             |
-                 |--- revise --|
+```mermaid
+flowchart TD
+G[Goal] --> P[Create Plan\n(steps + dependencies + tools)]
+P --> S1[Execute Step 1]
+S1 --> C1{Step success?}
+C1 -->|Yes| S2[Execute Step 2]
+C1 -->|No| RP[Revise Plan / Recover]
+RP --> P
+S2 --> C2{Done?}
+C2 -->|No| S3[Next Steps...]
+C2 -->|Yes| O[Output]
+S3 --> C2
 ```
 
 **What it is**  
-Create an explicit plan (steps/subgoals) before execution.
+Make an explicit plan (subgoals/steps) first, then execute step-by-step.
 
 **How it works**
-1. Translate the request into a clear goal.
-2. Generate a plan: steps + dependencies + required tools.
-3. Execute step-by-step, checking progress after each step.
-4. If a step fails or new info appears, update the plan.
+1. Translate request into a clear goal and constraints.
+2. Generate a plan: steps, dependencies, needed tools.
+3. Execute steps and check progress after each one.
+4. Revise plan when new info or failures occur.
 
 **Pros**
 - More reliable on complex objectives
-- Easier to track progress and handle dependencies
+- Makes progress trackable and auditable
 
 **Cons**
-- Plans can be wrong or too high-level
-- More orchestration complexity
+- Plans can be wrong/too vague
+- More orchestration and state tracking
 
 **When to use**
-- Multi-step problems where “just answer once” isn’t enough.
+- Multi-step problems with dependencies.
 
 **Example**
-- “Build a study plan”: define milestones → schedule topics → create daily tasks.
+- “Build a project”: plan repo structure → implement core → add tests → add deployment.
 
 ---
 
 ## 7) Multi‑Agent Collaboration
 
-```text
-                /-> [Agent: Research]
-[Goal] -> [Coordinator]
-                \-> [Agent: Builder]
-                 \-> [Agent: Reviewer]
-                        |
-                        v
-                    [Synthesis] -> [Output]
+```mermaid
+flowchart LR
+G[Goal] --> C[Coordinator]
+C --> R[Research Agent]
+C --> B[Builder Agent]
+C --> V[Verifier/Reviewer Agent]
+R --> S[Synthesis]
+B --> S
+V --> S
+S --> O[Final Output]
 ```
 
 **What it is**  
-Use multiple specialized agents to solve one larger problem.
+Use multiple specialized agents coordinated into a single solution.
 
 **How it works**
 1. Coordinator decomposes the task.
-2. Assign sub-tasks to specialist agents.
-3. Agents produce artifacts (notes, code, critiques).
-4. Coordinator merges into a final result (or iterates).
+2. Assign sub-tasks to specialists.
+3. Specialists produce artifacts (notes, code, critique).
+4. Coordinator merges and resolves conflicts; optionally iterates.
 
 **Pros**
 - Specialization improves quality
-- Modular and scalable
+- Robustness via review/verification agent
 
 **Cons**
-- Coordination overhead (formats, protocols, merging)
-- More cost/latency if unmanaged
+- Coordination overhead (protocols, merging)
+- Higher cost/latency if unmanaged
 
 **When to use**
-- When tasks span multiple skills/domains, or you want robust “review” by a separate agent.
+- Tasks spanning multiple skills/domains.
 
 **Example**
-- One agent gathers sources, one writes draft, one checks for errors, coordinator merges.
+- Research agent gathers sources, writer drafts, reviewer checks grounding, coordinator merges.
 
 ---
 
 ## 8) Memory Management
 
-```text
-[Events/Conversation]
-   |
-   +--> [Short-term memory (session)]
-   |
-   +--> [Long-term memory store]
-             |
-             v
-      [Retrieve relevant memories] -> [Context] -> [LLM]
+```mermaid
+flowchart TD
+E[Events / Conversation] --> STM[Short-term Memory\n(session buffer)]
+E --> LTM[Long-term Memory Store\n(vector/DB)]
+Q[Current Query] --> RET[Retrieve relevant memory]
+LTM --> RET
+STM --> CTX[Assemble Context]
+RET --> CTX
+CTX --> L[LLM/Agent]
+L --> O[Output]
 ```
 
 **What it is**  
-Store and recall useful information so the agent stays consistent across long tasks or repeated sessions.
+Store and retrieve information so the agent stays consistent across sessions and long tasks.
 
 **How it works**
 1. Decide what to store (preferences, facts, decisions, summaries).
-2. Store with metadata (time, tags, source).
-3. Retrieve only what’s relevant to the current task.
-4. Inject retrieved items into context with boundaries (so they don’t overpower the prompt).
+2. Store with metadata (timestamps, tags, sources).
+3. Retrieve only relevant items for the current query.
+4. Inject into context with boundaries (keep it short and clearly separated).
 
 **Pros**
 - Continuity and personalization
-- Less repeated questioning
+- Less repeated user questions
 
 **Cons**
 - Privacy/security concerns
-- Retrieval mistakes can add noise or wrong assumptions
+- Retrieval noise can confuse the model
 
 **When to use**
-- Assistants, long-running workflows, multi-step projects.
+- Assistants, project copilots, multi-day workflows.
 
 **Example**
-- Remember a user’s preferred output style and reuse it automatically.
+- Remember “preferred tone: concise” and reuse automatically.
 
 ---
 
 ## 9) Learning & Adaptation
 
-```text
-[Run agent] -> [Collect feedback/outcome] -> [Update behavior]
-      ^---------------------------------------------|
+```mermaid
+flowchart TD
+R[Run Agent] --> L[Log outcomes\n(success/fail + user edits)]
+L --> A[Analyze patterns\n(where it fails)]
+A --> U[Update prompts/routes/retrieval\n(or fine-tune)]
+U --> E[Evaluate before rollout]
+E -->|Pass| R
+E -->|Fail| A
 ```
 
 **What it is**  
-Improve over time based on feedback, outcomes, or logged data.
+Improve the system over time from feedback and outcomes.
 
 **How it works**
-1. Capture outcome signals (user edits, success/failure, ratings).
-2. Analyze patterns (where it fails, what users prefer).
-3. Update prompts, routes, retrieval settings, or fine-tune models.
-4. Validate improvements with evaluation before rollout.
+1. Capture feedback signals (ratings, edits, success/failure).
+2. Analyze failures and common user preferences.
+3. Update prompts/routes/retrieval policies (or fine-tune).
+4. Validate changes with evaluation before deploying.
 
 **Pros**
-- System gets better with use
+- Gets better with usage
 - Reduces repeated mistakes
 
 **Cons**
-- Risk of learning the wrong thing (bad feedback, drift)
-- Requires governance and evaluation
+- Risk of drift or learning from bad feedback
+- Needs governance and eval discipline
 
 **When to use**
 - High-usage agents where improvements compound.
 
 **Example**
-- If users often correct tone, update the style instructions or routing.
+- Users often ask for “short answers” → update default formatting + routing.
 
 ---
 
 ## 10) Model Context Protocol (MCP)
 
-```text
-[Agent/LLM] -> [MCP Client] <--> [MCP Server] -> [Tools/Resources]
+```mermaid
+flowchart LR
+A[Agent / LLM] --> C[MCP Client]
+C <--> S[MCP Server]
+S --> T1[Tool: Documents]
+S --> T2[Tool: DB]
+S --> T3[Tool: Tickets]
+T1 --> S
+T2 --> S
+T3 --> S
+S --> C --> A
 ```
 
 **What it is**  
-A standardized way to connect models to tools/resources via “servers,” reducing custom integration work.
+A standardized connector layer that exposes tools/resources through MCP servers, so agents integrate consistently.
 
 **How it works**
-1. Tools/resources are exposed behind MCP servers.
-2. The agent connects through an MCP client.
-3. Calls are standardized (discovery, auth, request/response).
+1. Tools/resources are hosted behind MCP servers.
+2. The agent uses an MCP client to discover and call capabilities.
+3. Auth and policy can be centralized at the server layer.
 
 **Pros**
-- Consistent integration patterns across many tools
-- Easier to maintain than dozens of custom connectors
+- Cleaner integrations; less custom glue code
+- Better maintainability across many tools
 
 **Cons**
-- Extra infrastructure layer
-- Still needs strict access control and auditing
+- Additional infrastructure layer
+- Still needs strong access control/audit logs
 
 **When to use**
-- You have many tools/data sources and want a clean, standardized integration layer.
+- Many tools/resources; you want a standard integration pattern.
 
 **Example**
-- One MCP server for “documents,” one for “database,” one for “tickets.”
+- One MCP server for internal docs, one for databases, one for Jira.
 
 ---
 
 ## 11) Goal Setting & Monitoring
 
-```text
-[Define goal + success criteria]
-   |
-   v
-[Execute] -> [Monitor metrics/state] -> [Adjust / recover / escalate]
+```mermaid
+flowchart TD
+G[Define Goal + Success Criteria] --> X[Execute steps]
+X --> M[Monitor state/metrics\n(progress, budget, risk)]
+M -->|On track| X
+M -->|Off track| A[Adjust plan / change route / escalate]
+A --> X
+M -->|Done| O[Output]
 ```
 
 **What it is**  
-Make goals explicit and continuously track progress toward them.
+Make goals explicit and continuously monitor progress so the agent stays aligned and can recover early.
 
 **How it works**
-1. Define measurable success criteria (even if approximate).
+1. Define success criteria (measurable if possible).
 2. Track progress signals after each step.
-3. If off-track: adjust plan, ask for help, or fail safely.
+3. Adjust plan or escalate when off-track.
+4. Stop when success criteria is met.
 
 **Pros**
-- Less wandering; more reliable autonomy
-- Detects problems early
+- More reliable autonomy
+- Early detection of failures
 
 **Cons**
 - Hard to define metrics for subjective tasks
-- Monitoring adds complexity
+- Monitoring adds overhead
 
 **When to use**
-- Long tasks with multiple steps and possible failure points.
+- Long-running workflows, autonomous agents, multi-step plans.
 
 **Example**
-- “Find 5 credible sources”: monitor count + diversity + relevance score.
+- “Collect 5 credible sources” with checks for diversity and relevance.
 
 ---
 
 ## 12) Exception Handling & Recovery
 
-```text
-[Action/Tool call]
-   |
-   v
-[Error?] -> [Retry] -> [Fallback] -> [Repair/Rollback] -> [Continue/Escalate]
+```mermaid
+flowchart TD
+A[Action / Tool Call] --> E{Error?}
+E -->|No| N[Next Step]
+E -->|Yes| R[Retry with backoff]
+R --> S{Recovered?}
+S -->|Yes| N
+S -->|No| F[Fallback route/tool]
+F --> T{Still failing?}
+T -->|No| N
+T -->|Yes| H[Escalate to Human / Safe Stop]
 ```
 
 **What it is**  
-Treat failures as normal: detect them, recover, and keep going safely.
+Design for failures: detect them, retry safely, fallback, repair state, or escalate.
 
 **How it works**
-1. Detect failures (timeouts, bad schemas, empty retrieval, tool errors).
-2. Retry with backoff if the failure is transient.
-3. Fallback to an alternative tool/route.
-4. Repair state or rollback if needed.
-5. Escalate to human if risk is high.
+1. Detect errors (timeouts, invalid schema, tool failure).
+2. Retry if transient (backoff, limited attempts).
+3. Fallback to alternative tool/route.
+4. Repair/rollback state if needed.
+5. Escalate for risky or persistent failures.
 
 **Pros**
-- More stable and production-ready
-- Prevents total failure from minor glitches
+- Production stability
+- Prevents small tool glitches from killing the workflow
 
 **Cons**
-- Requires careful engineering (idempotency, retries, logging)
-- Complex to test
+- More engineering: retries, idempotency, observability
+- Requires good testing
 
 **When to use**
-- Any agent that calls tools/APIs in production.
+- Any tool-using agent in real environments.
 
 **Example**
-- If retrieval returns nothing: broaden query → use keyword search → ask user.
+- Retrieval returns nothing → broaden query → use keyword search → ask user.
 
 ---
 
 ## 13) Human‑in‑the‑Loop (HITL)
 
-```text
-[Agent proposes]
-   |
-   v
-[Human reviews/edits/approves]
-   |
-   v
-[Execute] -> [Feedback captured] -> [Agent improves]
+```mermaid
+sequenceDiagram
+autonumber
+participant U as Human
+participant A as Agent
+participant S as System/Tools
+A->>U: Proposal + rationale
+U-->>A: Approve / Edit / Reject
+A->>S: Execute approved action
+S-->>A: Result
+A-->>U: Confirmation + summary
 ```
 
 **What it is**  
-A design where humans review or approve critical steps.
+Humans review or approve sensitive steps; the agent proposes and humans decide.
 
 **How it works**
-1. Agent produces a proposal and rationale.
-2. Human edits/approves/rejects.
-3. System executes only after approval (or uses partial approval rules).
-4. Store feedback for future improvements.
+1. Agent drafts a proposal and rationale.
+2. Human approves/edits/rejects.
+3. Only approved actions execute.
+4. Feedback is stored to improve future behavior.
 
 **Pros**
-- Safer for high-stakes decisions
-- Builds trust and accountability
+- Safer for high-stakes actions
+- Trust and accountability
 
 **Cons**
-- Slower; requires human availability
-- Needs good UX (what to show, how to approve)
+- Slower; needs review UX
+- Requires human availability
 
 **When to use**
-- Anything risky: legal/medical/financial actions, customer-facing actions, irreversible operations.
+- Legal/medical/financial, irreversible operations, customer-facing actions.
 
 **Example**
-- Draft an email → user approves → send.
+- “Draft client email” → user approves → send.
 
 ---
 
 ## 14) Knowledge Retrieval (RAG)
 
-```text
-[Question]
-   |
-   v
-[Retrieve relevant passages]
-   |
-   v
-[Grounded prompt (question + passages)]
-   |
-   v
-[LLM answer + citations (optional)]
+```mermaid
+flowchart TD
+Q[Question] --> E[Embed/Rewrite Query]
+E --> R[Retrieve top-k chunks\n(vector/keyword/hybrid)]
+R --> RR[Rerank/Filter\n(optional)]
+RR --> C[Compose grounded prompt\n(question + context)]
+C --> L[LLM]
+L --> O[Answer\n(+ citations/quotes optional)]
 ```
 
 **What it is**  
-Retrieve knowledge from a database/doc store and use it to ground the model’s response.
+Retrieve relevant knowledge from an external store and feed it into generation to ground the answer.
 
 **How it works**
-1. Convert query to retrieval form (embedding/keywords/hybrid).
-2. Retrieve top‑k chunks.
-3. Optionally rerank and filter for relevance.
-4. Provide retrieved context to the LLM to generate a grounded answer.
-5. Optionally cite sources and store trace for audit.
+1. Build a good retrieval query (embed or rewrite).
+2. Retrieve top-k chunks from the store.
+3. Optional reranking and filtering for relevance.
+4. Assemble prompt with retrieved context.
+5. Generate grounded output; optionally cite sources.
 
 **Pros**
-- Fewer hallucinations; answers based on real docs
-- Keeps system up-to-date without retraining
+- More factual answers; fewer hallucinations
+- Updatable knowledge without retraining
 
 **Cons**
-- Retrieval quality is hard (chunking, noise, missing data)
-- Requires indexing/updates + extra latency
+- Retrieval quality is hard (chunking/noise/missing data)
+- Adds latency + indexing overhead
 
 **When to use**
-- Enterprise knowledge bases, manuals, reports, policies, document Q&A.
+- Doc Q&A, enterprise knowledge, policies, manuals, contracts.
 
 **Example**
-- “What does our policy say about refunds?” → retrieve policy section → answer grounded.
+- “What does the policy say about refunds?” → retrieve section → answer grounded.
 
 ---
 
 ## 15) Inter‑Agent Communication (A2A)
 
-```text
-[Agent A] <---- messages/tasks/results ----> [Agent B]
-     \-------------------------------------> [Agent C]
+```mermaid
+sequenceDiagram
+autonumber
+participant A as Agent A
+participant B as Agent B
+participant C as Agent C
+A->>B: Task request (schema + constraints)
+B-->>A: Result (or stream updates)
+A->>C: Verification request
+C-->>A: Verified/flagged findings
+A-->>A: Merge + decide next step
 ```
 
 **What it is**  
-A structured way for agents to communicate, delegate tasks, and stream updates—especially across different implementations.
+A structured protocol for agents to communicate and delegate tasks (one-shot or streaming).
 
 **How it works**
 1. Agents advertise capabilities (what they can do).
-2. One agent assigns tasks to another with a clear schema.
-3. Receiver returns results (one-shot or streaming).
+2. Caller sends a structured task request.
+3. Receiver returns results (and/or progress updates).
 4. Caller merges and continues.
 
 **Pros**
-- Enables “ecosystems” of agents
-- Clean delegation and modularity
+- Interoperability and modular ecosystems
+- Clean delegation to specialist services
 
 **Cons**
-- Requires strong auth, rate limits, and safety rules
-- Coordination errors can multiply
+- Security/auth is mandatory
+- Coordination mistakes can multiply
 
 **When to use**
-- You want separate agent services that can collaborate (specialists, external teams, plug-ins).
+- Many agents/services collaborate across teams or frameworks.
 
 **Example**
-- Research agent asks math agent to verify calculations, then merges into report.
+- Research agent delegates “fact-check” to verifier agent, then merges results.
 
 ---
 
 ## 16) Resource‑Aware Optimization
 
-```text
-[Request] -> [Complexity/Cost estimate]
-                 |
-                 +--> [Cheap path: small model, fewer tools]
-                 |
-                 \--> [Strong path: bigger model, more retrieval/tools]
+```mermaid
+flowchart TD
+I[Request] --> S[Score difficulty + risk + SLA]
+S --> D{Choose compute level}
+D -->|Low| L1[Fast/Cheap path\nsmall model + minimal tools]
+D -->|Medium| L2[Balanced path\nhybrid retrieval + standard model]
+D -->|High| L3[Strong path\nbest model + RAG + Reflection]
+L1 --> O[Output]
+L2 --> O
+L3 --> O
 ```
 
 **What it is**  
-Choose the right “power level” (model/tooling/context size) for each request to balance cost, latency, and accuracy.
+Route requests to the right “power level” (model/tooling/context) to balance quality, latency, and cost.
 
 **How it works**
-1. Estimate difficulty/importance (intent, length, ambiguity, risk).
-2. Route to a cheaper or stronger model (or different workflow).
-3. Tune context: summarize, drop noise, keep only essentials.
-4. Track spend/latency metrics to keep budgets under control.
+1. Estimate complexity/importance/risk.
+2. Choose model and workflow tier.
+3. Reduce wasted context (summarize, trim, prioritize).
+4. Monitor spend/latency and tune routing.
 
 **Pros**
-- Saves cost and time while keeping quality
-- Scales better in production
+- Big cost savings without killing quality
+- Works well in production at scale
 
 **Cons**
-- Wrong estimation can reduce quality
-- Requires monitoring and tuning
+- Wrong tier selection lowers quality
+- Needs monitoring/evals to tune
 
 **When to use**
-- High traffic, expensive models, strict latency budgets, mixed difficulty requests.
+- Variable request difficulty, expensive models, strict SLAs.
 
 **Example**
-- Simple FAQ → small model  
-- Complex multi-doc analysis → strong model + retrieval + reflection
+- Simple FAQ → cheap path; complex multi-doc analysis → strong path.
 
 ---
 
 ## 17) Reasoning Techniques
 
-```text
-[Problem]
-   |
-   v
-[Reasoning strategy]
-   |
-   v
-[Optional: tool calls / intermediate checks]
-   |
-   v
-[Answer + verification]
+```mermaid
+flowchart TD
+P[Problem] --> D[Decompose / choose reasoning strategy]
+D --> A[Act: tool calls / sub-steps\n(optional)]
+A --> V[Verify constraints\nchecks/tests/cross-check]
+V -->|Fail| D
+V -->|Pass| O[Answer]
 ```
 
 **What it is**  
-Use structured reasoning methods (often with intermediate steps and tool use) to solve harder problems.
+Use structured reasoning (decomposition, intermediate checks, tool calls) for hard tasks.
 
 **How it works**
-1. Choose a strategy: step-by-step decomposition, tree search, “think + act” loops.
-2. Use tools when calculation/facts are needed.
-3. Verify: consistency checks, constraints, unit tests, cross-checking.
-4. Produce the final answer with a short rationale.
+1. Decompose the problem and pick a reasoning approach.
+2. Use tools for computation/facts.
+3. Verify with constraints, tests, or cross-checking.
+4. Iterate if verification fails.
 
 **Pros**
-- Higher success on complex tasks (math, planning, debugging)
-- Better reliability with verification
+- Better on complex tasks (math, debugging, planning)
+- Verification improves reliability
 
 **Cons**
-- More tokens/latency
-- Needs guardrails to prevent “overthinking” loops
+- More tokens and latency
+- Needs guardrails for loops
 
 **When to use**
-- Complex reasoning tasks where one-shot answers are unreliable.
+- Complex reasoning tasks where one-shot answers fail often.
 
 **Example**
-- Solve a multi-step word problem with calculator tool + verification.
+- Debugging: hypothesize → test → refine → confirm fix.
 
 ---
 
 ## 18) Guardrails / Safety Patterns
 
-```text
-[Input checks] -> [Policy constraints] -> [Tool restrictions]
-      |
-      v
-[LLM output] -> [Output checks] -> [Safe output / escalation]
+```mermaid
+flowchart TD
+IN[User Input] --> IV[Input Validation\n(policy/risk checks)]
+IV --> PC[Policy Constraints\n(system rules + boundaries)]
+PC --> TR[Tool Restrictions\nallowlist + sandbox + rate limits]
+TR --> L[LLM/Agent]
+L --> OV[Output Validation\nPII/leak checks + format checks]
+OV -->|Safe| OUT[Safe Output]
+OV -->|Risky| ESC[Escalate / Refuse / Human review]
 ```
 
 **What it is**  
-Multiple safety layers that constrain what the agent can do and how it behaves.
+Layered safety controls: validate input, constrain tools, and validate output.
 
 **How it works**
-1. Validate input (red flags, missing details, disallowed asks).
-2. Restrict tools (allowlists, read-only modes, sandboxing).
-3. Constrain prompts (role boundaries, “do not do X”).
-4. Validate output (policy checks, leakage prevention, format checks).
-5. Escalate to human for sensitive actions.
+1. Screen input for risky intents and missing info.
+2. Enforce policy constraints in prompts and routing.
+3. Limit tools (read-only modes, allowlists, sandboxes).
+4. Validate outputs (policy compliance, formatting, leakage).
+5. Escalate/refuse when needed.
 
 **Pros**
 - Safer, more trustworthy systems
-- Reduces harmful or off-policy outputs
+- Reduces harmful outcomes and data leaks
 
 **Cons**
 - Can over-block and reduce usefulness
-- Needs continuous updates as threats evolve
+- Needs ongoing maintenance
 
 **When to use**
-- Any product, especially with tool actions and real-world impact.
+- Any production agent (especially tool-using and customer-facing).
 
 **Example**
-- Tool allowlist + human approval for sending emails or modifying files.
+- Require approval before sending emails or executing file changes.
 
 ---
 
 ## 19) Evaluation & Monitoring
 
-```text
-[Agent runs]
-   |
-   v
-[Log: inputs, tools, outputs, latency, cost]
-   |
-   v
-[Evaluate quality] -> [Detect drift] -> [Improve + redeploy]
+```mermaid
+flowchart TD
+RUN[Agent Runs] --> LOG[Log traces\n(inputs, tools, outputs, latency, cost)]
+LOG --> EVAL[Evaluate quality\n(golden set + metrics)]
+EVAL --> DRIFT[Drift/Anomaly detection]
+DRIFT --> IMP[Improve\n(prompts/routes/retrieval/model)]
+IMP --> DEP[Deploy + A/B test]
+DEP --> RUN
 ```
 
 **What it is**  
-Continuous measurement of quality, cost, and safety—before and after deployment.
+Measure quality, cost, and safety continuously—offline and in production.
 
 **How it works**
-1. Define metrics (task success, factuality, latency, cost, refusal rate).
-2. Create eval sets (unit tests, golden answers, adversarial cases).
-3. Monitor production logs (alerts, drift detection).
-4. Run A/B tests and compare agent versions.
+1. Define metrics (accuracy, groundedness, latency, cost, refusal rate).
+2. Build eval datasets (golden answers, adversarial cases).
+3. Monitor production traces and alerts.
+4. A/B test improvements before full rollout.
 
 **Pros**
-- Keeps systems reliable over time
+- Keeps the system reliable over time
 - Enables safe iteration and governance
 
 **Cons**
-- Requires datasets, infra, and careful metric design
-- “Measuring the right thing” is hard
+- Requires infra + careful metric design
+- Ground truth can be hard to define
 
 **When to use**
-- Any production agent, especially in regulated or customer-facing environments.
+- Any production agent; essential for regulated/high-stakes domains.
 
 **Example**
-- Evaluate RAG answer accuracy weekly; alert when retrieval recall drops.
+- Weekly RAG eval: track retrieval recall; alert when it drops.
 
 ---
 
 ## 20) Prioritization
 
-```text
-[Tasks] -> [Score: urgency + impact + risk + dependencies] -> [Queue] -> [Execute]
-                               ^------------------------------------|
-                               |------ re-score as new info arrives-|
+```mermaid
+flowchart TD
+T[Incoming tasks] --> N[Normalize into task objects]
+N --> S[Score tasks\n(urgency, impact, risk, deps, cost)]
+S --> Q[Queue / Scheduler]
+Q --> X[Execute next task]
+X --> U[Update scores\n(new info, failures, deadlines)]
+U --> S
+X --> O[Outputs/Results]
 ```
 
 **What it is**  
-Decide what to do first when there are multiple tasks or limited resources.
+Decide what to do first when tasks compete for time/resources.
 
 **How it works**
-1. Convert work into a task list (explicit queue).
-2. Score each task (deadline, user value, risk, dependencies, cost).
-3. Execute highest priority first.
-4. Re-score when conditions change (new deadlines, failures, new tasks).
+1. Turn work into explicit tasks.
+2. Score tasks using a policy (urgency, value, risk, dependencies).
+3. Execute highest priority.
+4. Re-score continuously as conditions change.
 
 **Pros**
 - Prevents wasted work on low-value tasks
-- Improves responsiveness to urgent issues
+- Helps meet SLAs and urgency
 
 **Cons**
 - Bad scoring can starve important tasks
-- Needs good signals and tuning
+- Needs tuning and good signals
 
 **When to use**
 - Multi-user agents, long-running backlogs, async job systems.
 
 **Example**
-- Support agent: urgent outage tickets first, low-impact questions later.
+- Support agent: outage tickets first, general questions later.
 
 ---
 
 ## 21) Exploration & Discovery
 
-```text
-[Unknown problem space]
-   |
-   v
-[Generate hypotheses/options]
-   |
-   v
-[Experiment / search / simulate]
-   |
-   v
-[Evaluate results] -> [Refine] -> (iterate) -> [Best answer/strategy]
+```mermaid
+flowchart TD
+S[Start: unknown space] --> H[Generate hypotheses/options]
+H --> G[Gather evidence\n(search, tools, experiments)]
+G --> E[Evaluate findings\nrank/eliminate]
+E -->|Not confident| R[Refine hypotheses]
+R --> G
+E -->|Confident| O[Best answer/strategy]
 ```
 
 **What it is**  
-A loop for research-like tasks where the agent must explore, test, and learn.
+A research-style loop: propose hypotheses, gather evidence, evaluate, and iterate.
 
 **How it works**
-1. Start with hypotheses (possible causes/solutions).
-2. Gather evidence (search, tool calls, experiments).
-3. Evaluate findings and eliminate weak hypotheses.
-4. Iterate until confidence is high or budget is reached.
+1. Generate hypotheses or candidate solutions.
+2. Run experiments/search/tool calls to gather evidence.
+3. Evaluate and prune weak hypotheses.
+4. Repeat until confident or budget is reached.
 
 **Pros**
-- Great for open-ended research and debugging unknowns
-- Finds non-obvious solutions
+- Great for open-ended research and diagnosing unknowns
+- Can discover non-obvious solutions
 
 **Cons**
-- Can be expensive (many trials)
+- Can be expensive (many iterations)
 - Needs stopping criteria and evaluation rules
 
 **When to use**
-- Research, diagnosis, innovation, hypothesis-driven debugging.
+- Investigation, debugging, innovation, exploratory analysis.
 
 **Example**
-- “Why is the system slow?” → test DB, network, caching hypotheses → narrow down cause.
+- “Why is the system slow?” → test DB/network/cache hypotheses → narrow down cause.
 
 ---
 
-## Tips for combining patterns (common “recipes”)
+## Common pattern “recipes” (what teams actually ship)
 
-- **RAG + Reflection**: retrieve facts, draft answer, critique for grounding, revise.  
-- **Routing + Tool Use**: route requests, then call the right tool.  
-- **Planning + Exception Recovery**: plan steps, execute, recover when tools fail.  
-- **Multi-agent + Evaluation**: specialist agents produce artifacts; evaluator agent scores outputs.
+- **RAG + Reflection**: retrieve → draft → critique groundedness → revise  
+- **Routing + Tool Use**: classify → call the right tool → answer  
+- **Planning + Recovery**: plan → execute → recover on tool failure → continue  
+- **Multi-agent + Evaluation**: specialists draft + reviewer scores + coordinator merges  
+- **Guardrails + HITL**: tool allowlist + human approval for sensitive actions
 
----
-
-### Want a version tailored to your project?
-If you tell me your target use case (e.g., “document analyzer”, “study assistant”, “coding agent”), I can generate:
-- a recommended **pattern stack**
-- a reference architecture diagram
-- a minimal implementation checklist
