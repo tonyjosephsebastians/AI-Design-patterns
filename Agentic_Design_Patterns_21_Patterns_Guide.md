@@ -38,9 +38,9 @@ Each pattern includes a **Mermaid architecture diagram**, plus: **what it is**, 
 
 ```mermaid
 flowchart TD
-A[Input] --> B[Step 1 Prompt (e.g., summarize)]
-B --> C[Step 2 Prompt (e.g., extract structured data)]
-C --> D[Step 3 Prompt (e.g., format output)]
+A[Input] --> B[Step 1 Prompt e.g. summarize ]
+B --> C[Step 2 Prompt e.g. extract structured data ]
+C --> D[Step 3 Prompt e.g. format output ]
 D --> E[Final Output]
 ```
 
@@ -75,11 +75,11 @@ Split a complex task into a sequence of smaller prompts; each step produces a st
 
 ```mermaid
 flowchart TD
-I[User Request / Input] --> R{Router (intent + confidence)}
-R -->|Type A| A[Workflow A (e.g., Q&A)]
-R -->|Type B| B[Workflow B (e.g., coding)]
-R -->|Type C| C[Workflow C (e.g., retrieval)]
-R -->|Low confidence| Q[Ask Clarifying Question]
+I[User Request Input] --> R{Router intent and confidence }
+R --> A[Workflow A e.g. Q&A ]
+R --> B[Workflow B e.g. coding ]
+R --> C[Workflow C e.g. retrieval ]
+R --> Q[Ask Clarifying Question]
 A --> O[Output]
 B --> O
 C --> O
@@ -117,9 +117,9 @@ A decision layer that chooses the best workflow/tool/agent based on intent, comp
 ```mermaid
 flowchart TD
 I[Input] --> F[Fork]
-F --> A[Task A (e.g., retrieve source 1)]
-F --> B[Task B (e.g., retrieve source 2)]
-F --> C[Task C (e.g., retrieve source 3)]
+F --> A[Task A e.g. retrieve source 1 ]
+F --> B[Task B e.g. retrieve source 2 ]
+F --> C[Task C e.g. retrieve source 3 ]
 A --> J[Join Merge]
 B --> J
 C --> J
@@ -154,10 +154,10 @@ Run independent subtasks concurrently and merge outputs.
 
 ```mermaid
 flowchart TD
-D[Draft Output] --> C[Critique / Review (check requirements, errors)]
-C -->|Needs improvement| R[Revise using critique]
+D[Draft Output] --> C[Critique Review check requirements errors ]
+C --> R[Revise using critique]
 R --> D
-C -->|Meets criteria| O[Final Output]
+C --> O[Final Output]
 ```
 
 **What it is**  
@@ -191,11 +191,11 @@ An improvement loop: produce a draft, critique it, then revise until it meets qu
 sequenceDiagram
 autonumber
 participant U as User
-participant L as LLM/Agent
-participant T as Tool/API
+participant L as LLM Agent
+participant T as Tool API
 U->>L: Request
-L->>L: Decide tool + arguments
-L->>T: Call tool(args)
+L->>L: Decide tool and arguments
+L->>T: Call tool args
 T-->>L: Tool result
 L-->>U: Answer using result
 ```
@@ -229,15 +229,15 @@ The agent calls external tools (APIs, DB, calculators, file ops) for accurate da
 
 ```mermaid
 flowchart TD
-G[Goal] --> P[Create Plan (steps + dependencies + tools)]
+G[Goal] --> P[Create Plan steps and dependencies and tools ]
 P --> S1[Execute Step 1]
-S1 --> C1{Step success?}
-C1 -->|Yes| S2[Execute Step 2]
-C1 -->|No| RP[Revise Plan Recover]
+S1 --> C1{Step success }
+C1 --> S2[Execute Step 2]
+C1 --> RP[Revise Plan Recover]
 RP --> P
-S2 --> C2{Done?}
-C2 -->|No| S3[Next Steps...]
-C2 -->|Yes| O[Output]
+S2 --> C2{Done }
+C2 --> S3[Next Steps ]
+C2 --> O[Output]
 S3 --> C2
 ```
 
@@ -273,7 +273,7 @@ flowchart LR
 G[Goal] --> C[Coordinator]
 C --> R[Research Agent]
 C --> B[Builder Agent]
-C --> V[Verifier/Reviewer Agent]
+C --> V[Verifier Reviewer Agent]
 R --> S[Synthesis]
 B --> S
 V --> S
@@ -309,13 +309,13 @@ Use multiple specialized agents coordinated into a single solution.
 
 ```mermaid
 flowchart TD
-E[Events / Conversation] --> STM[Short-term Memory (session buffer)]
-E --> LTM[Long-term Memory Store (vector/DB)]
+E[Events Conversation] --> STM[Short-term Memory session buffer ]
+E --> LTM[Long-term Memory Store vector DB ]
 Q[Current Query] --> RET[Retrieve relevant memory]
 LTM --> RET
 STM --> CTX[Assemble Context]
 RET --> CTX
-CTX --> L[LLM/Agent]
+CTX --> L[LLM Agent]
 L --> O[Output]
 ```
 
@@ -348,12 +348,12 @@ Store and retrieve information so the agent stays consistent across sessions and
 
 ```mermaid
 flowchart TD
-R[Run Agent] --> L[Log outcomes (success/fail + user edits)]
-L --> A[Analyze patterns (where it fails)]
-A --> U[Update prompts/routes/retrieval (or fine-tune)]
+R[Run Agent] --> L[Log outcomes success fail and user edits ]
+L --> A[Analyze patterns where it fails ]
+A --> U[Update prompts routes retrieval or fine-tune ]
 U --> E[Evaluate before rollout]
-E -->|Pass| R
-E -->|Fail| A
+E --> R
+E --> A
 ```
 
 **What it is**  
@@ -385,7 +385,7 @@ Improve the system over time from feedback and outcomes.
 
 ```mermaid
 flowchart LR
-A[Agent / LLM] --> C[MCP Client]
+A[Agent LLM] --> C[MCP Client]
 C <--> S[MCP Server]
 S --> T1[Tool: Documents]
 S --> T2[Tool: DB]
@@ -424,12 +424,12 @@ A standardized connector layer that exposes tools/resources through MCP servers,
 
 ```mermaid
 flowchart TD
-G[Define Goal + Success Criteria] --> X[Execute steps]
-X --> M[Monitor state/metrics (progress, budget, risk)]
-M -->|On track| X
-M -->|Off track| A[Adjust plan / change route / escalate]
+G[Define Goal and Success Criteria] --> X[Execute steps]
+X --> M[Monitor state metrics progress budget risk ]
+M --> X
+M --> A[Adjust plan change route escalate]
 A --> X
-M -->|Done| O[Output]
+M --> O[Output]
 ```
 
 **What it is**  
@@ -461,15 +461,15 @@ Make goals explicit and continuously monitor progress so the agent stays aligned
 
 ```mermaid
 flowchart TD
-A[Action / Tool Call] --> E{Error?}
-E -->|No| N[Next Step]
-E -->|Yes| R[Retry with backoff]
-R --> S{Recovered?}
-S -->|Yes| N
-S -->|No| F[Fallback route/tool]
-F --> T{Still failing?}
-T -->|No| N
-T -->|Yes| H[Escalate to Human / Safe Stop]
+A[Action Tool Call] --> E{Error }
+E --> N[Next Step]
+E --> R[Retry with backoff]
+R --> S{Recovered }
+S --> N
+S --> F[Fallback route tool]
+F --> T{Still failing }
+T --> N
+T --> H[Escalate to Human Safe Stop]
 ```
 
 **What it is**  
@@ -505,12 +505,12 @@ sequenceDiagram
 autonumber
 participant U as Human
 participant A as Agent
-participant S as System/Tools
-A->>U: Proposal + rationale
-U-->>A: Approve / Edit / Reject
+participant S as System Tools
+A->>U: Proposal and rationale
+U-->>A: Approve Edit Reject
 A->>S: Execute approved action
 S-->>A: Result
-A-->>U: Confirmation + summary
+A-->>U: Confirmation and summary
 ```
 
 **What it is**  
@@ -542,12 +542,12 @@ Humans review or approve sensitive steps; the agent proposes and humans decide.
 
 ```mermaid
 flowchart TD
-Q[Question] --> E[Embed/Rewrite Query]
-E --> R[Retrieve top-k chunks (vector/keyword/hybrid)]
-R --> RR[Rerank/Filter (optional)]
-RR --> C[Compose grounded prompt (question + context)]
+Q[Question] --> E[Embed Rewrite Query]
+E --> R[Retrieve top-k chunks vector keyword hybrid ]
+R --> RR[Rerank Filter optional ]
+RR --> C[Compose grounded prompt question and context ]
 C --> L[LLM]
-L --> O[Answer (+ citations/quotes optional)]
+L --> O[Answer and citations quotes optional ]
 ```
 
 **What it is**  
@@ -584,11 +584,11 @@ autonumber
 participant A as Agent A
 participant B as Agent B
 participant C as Agent C
-A->>B: Task request (schema + constraints)
-B-->>A: Result (or stream updates)
+A->>B: Task request schema and constraints
+B-->>A: Result or stream updates
 A->>C: Verification request
-C-->>A: Verified/flagged findings
-A-->>A: Merge + decide next step
+C-->>A: Verified flagged findings
+A-->>A: Merge and decide next step
 ```
 
 **What it is**  
@@ -620,11 +620,11 @@ A structured protocol for agents to communicate and delegate tasks (one-shot or 
 
 ```mermaid
 flowchart TD
-I[Request] --> S[Score difficulty + risk + SLA]
+I[Request] --> S[Score difficulty and risk and SLA]
 S --> D{Choose compute level}
-D -->|Low| L1[Fast/Cheap path small model + minimal tools]
-D -->|Medium| L2[Balanced path hybrid retrieval + standard model]
-D -->|High| L3[Strong path best model + RAG + Reflection]
+D --> L1[Fast Cheap path small model and minimal tools]
+D --> L2[Balanced path hybrid retrieval and standard model]
+D --> L3[Strong path best model and RAG and Reflection]
 L1 --> O[Output]
 L2 --> O
 L3 --> O
@@ -659,11 +659,11 @@ Route requests to the right “power level” (model/tooling/context) to balance
 
 ```mermaid
 flowchart TD
-P[Problem] --> D[Decompose / choose reasoning strategy]
-D --> A[Act: tool calls / sub-steps (optional)]
-A --> V[Verify constraints checks/tests/cross-check]
-V -->|Fail| D
-V -->|Pass| O[Answer]
+P[Problem] --> D[Decompose choose reasoning strategy]
+D --> A[Act: tool calls sub-steps optional ]
+A --> V[Verify constraints checks tests cross-check]
+V --> D
+V --> O[Answer]
 ```
 
 **What it is**  
@@ -695,13 +695,13 @@ Use structured reasoning (decomposition, intermediate checks, tool calls) for ha
 
 ```mermaid
 flowchart TD
-IN[User Input] --> IV[Input Validation (policy/risk checks)]
-IV --> PC[Policy Constraints (system rules + boundaries)]
-PC --> TR[Tool Restrictions allowlist + sandbox + rate limits]
-TR --> L[LLM/Agent]
-L --> OV[Output Validation PII/leak checks + format checks]
-OV -->|Safe| OUT[Safe Output]
-OV -->|Risky| ESC[Escalate / Refuse / Human review]
+IN[User Input] --> IV[Input Validation policy risk checks ]
+IV --> PC[Policy Constraints system rules and boundaries ]
+PC --> TR[Tool Restrictions allowlist and sandbox and rate limits]
+TR --> L[LLM Agent]
+L --> OV[Output Validation PII leak checks and format checks]
+OV --> OUT[Safe Output]
+OV --> ESC[Escalate Refuse Human review]
 ```
 
 **What it is**  
@@ -734,11 +734,11 @@ Layered safety controls: validate input, constrain tools, and validate output.
 
 ```mermaid
 flowchart TD
-RUN[Agent Runs] --> LOG[Log traces (inputs, tools, outputs, latency, cost)]
-LOG --> EVAL[Evaluate quality (golden set + metrics)]
-EVAL --> DRIFT[Drift/Anomaly detection]
-DRIFT --> IMP[Improve (prompts/routes/retrieval/model)]
-IMP --> DEP[Deploy + A/B test]
+RUN[Agent Runs] --> LOG[Log traces inputs tools outputs latency cost ]
+LOG --> EVAL[Evaluate quality golden set and metrics ]
+EVAL --> DRIFT[Drift Anomaly detection]
+DRIFT --> IMP[Improve prompts routes retrieval model ]
+IMP --> DEP[Deploy and A B test]
 DEP --> RUN
 ```
 
@@ -772,12 +772,12 @@ Measure quality, cost, and safety continuously—offline and in production.
 ```mermaid
 flowchart TD
 T[Incoming tasks] --> N[Normalize into task objects]
-N --> S[Score tasks (urgency, impact, risk, deps, cost)]
-S --> Q[Queue / Scheduler]
+N --> S[Score tasks urgency impact risk deps cost ]
+S --> Q[Queue Scheduler]
 Q --> X[Execute next task]
-X --> U[Update scores (new info, failures, deadlines)]
+X --> U[Update scores new info failures deadlines ]
 U --> S
-X --> O[Outputs/Results]
+X --> O[Outputs Results]
 ```
 
 **What it is**  
@@ -809,12 +809,12 @@ Decide what to do first when tasks compete for time/resources.
 
 ```mermaid
 flowchart TD
-S[Start: unknown space] --> H[Generate hypotheses/options]
-H --> G[Gather evidence (search, tools, experiments)]
-G --> E[Evaluate findings rank/eliminate]
-E -->|Not confident| R[Refine hypotheses]
+S[Start: unknown space] --> H[Generate hypotheses options]
+H --> G[Gather evidence search tools experiments ]
+G --> E[Evaluate findings rank eliminate]
+E --> R[Refine hypotheses]
 R --> G
-E -->|Confident| O[Best answer/strategy]
+E --> O[Best answer strategy]
 ```
 
 **What it is**  
