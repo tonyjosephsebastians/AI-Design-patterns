@@ -1,10 +1,6 @@
-# Agentic Design Patterns — Architecture Diagrams (Mermaid) + Practical Guide (21 Patterns)
+# Agentic Design Patterns — Architecture Diagrams + Practical Guide (21 Patterns)
 
-This is a **Mermaid-first Markdown guide** to the **21 agentic design patterns**.  
-Each pattern includes a **Mermaid architecture diagram**, plus: **what it is**, **how it works**, **pros/cons**, **when to use**, and **examples**.
 
-> Mermaid diagrams render in many Markdown viewers (GitHub, GitLab, Obsidian, Notion-with-plugin, etc.).  
-> If your viewer doesn’t render Mermaid, you’ll still see the diagram source code.
 
 ---
 
