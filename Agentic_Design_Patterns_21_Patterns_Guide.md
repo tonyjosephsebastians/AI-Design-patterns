@@ -1,4 +1,4 @@
-# Agentic Design Patterns — Architecture Diagrams (Mermaid) + Practical Guide (21 Patterns)
+# Agentic Design Patterns — Architecture Diagrams  + Practical Guide (21 Patterns)
 
 
 ---
