@@ -1,6 +1,5 @@
-# Reliability & Resilience Patterns in FastAPI (Single Guide)
+# Reliability & Resilience Patterns in FastAPI 
 
-A copy‑paste friendly guide to **7 core reliability patterns** with **FastAPI examples**.
 
 > **Important:** examples are **in-memory** for simplicity. In production (multiple workers/instances), move shared state (rate limits, breakers, cache) to **Redis** or another shared store.
 
