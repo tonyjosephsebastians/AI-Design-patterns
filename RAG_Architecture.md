@@ -1,17 +1,4 @@
-# RAG Architectures 2025 — GitHub Safe Mermaid Diagrams + Practical Notes
-
-Based on the provided article text, this document explains **8 popular Retrieval Augmented Generation architectures** and how they work in practice.
-
-Each section includes:
-
-- A **GitHub safe Mermaid diagram** (strict labels to avoid parser errors)
-- **What it is**
-- **How it works**
-- **Pros and Cons**
-- **When to use**
-- **Example**
-
-> Note: These Mermaid blocks avoid characters that often break GitHub rendering in node labels.
+# RAG Architectures
 
 ---
 
