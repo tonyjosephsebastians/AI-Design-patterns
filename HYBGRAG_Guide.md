@@ -1,4 +1,4 @@
-# HYBGRAG (Hybrid RAG on Text + Graph) — GitHub Safe Mermaid Guide
+# HYBGRAG (Hybrid RAG on Text + Graph) 
 
 This guide explains the **HYBGRAG** concept from the uploaded PDF (**HYD.pdf**). HYBGRAG is designed for **hybrid question answering** over a **semi structured knowledge base**: a knowledge graph plus text documents attached to graph entities.
 
