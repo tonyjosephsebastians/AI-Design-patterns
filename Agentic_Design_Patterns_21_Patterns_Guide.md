@@ -1,8 +1,4 @@
 # Agentic Design Patterns — Architecture Diagrams  + Practical Guide (21 Patterns)
-
-
----
-
 ## Table of contents
 
 1. Prompt Chaining  
