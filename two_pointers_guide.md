@@ -12,7 +12,7 @@ Trigger signals:
 4. You are validating mirrored characters/elements.
 
 Common variants:
-1. Opposite ends (`left`, `right`) moving inward.
+1. Opposite ends (`left`, `right`) moving.
 2. Same direction (fast/slow compaction).
 3. Fixed + two pointers (3Sum style after sorting).
 4. Partition style (e.g., Dutch flag family).
